@@ -64,4 +64,49 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# G1_RepositorioOficial
+# G1_GestionCafeteria
+
+## --------------------------------------------------------------------------
+
+## Configuración del Entorno
+
+1. Clonar el repositorio:
+   ```bash
+   git clone https://github.com/GestionCafeteriaESPE/G1_GestionCafeteria.git
+   cd G1_GestionCafeteria.git
+
+2. Configurar el Archivo .env
+   Copia el archivo de ejemplo ".env.example" y crea un ".env". Configúralo con las credenciales de tu entorno local:
+
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306 -- De acuerdo a tu puerto de mysql en xampp
+   DB_DATABASE=G1_GestionCafeteria
+   DB_USERNAME=root
+   DB_PASSWORD=
+
+3. Crear la Base de Datos en phpMyAdmin
+   Abre phpMyAdmin en navegador
+   Haz clic en "Nueva" en el panel de la izquierda.
+   Introduce G1_GestionCafeteria como el nombre de la NUEVA base de datos.
+   Selecciona el cotejamiento utf8mb4_unicode_ci.
+   Haz clic en "Crear".
+
+4. Instalar Dependencias
+   composer install
+   npm install
+
+5. Ejecutar Migraciones y Seeders
+   Para crear las tablas y poblar la base de datos con datos iniciales, ejecuta el siguiente comando:
+      php artisan migrate:fresh --seed
+   Esto eliminará todas las tablas, las recreará y luego ejecutará los seeders para insertar los datos iniciales.
+   Además, guardará los datos dentro de "DatabaseSeeder.php" en la bdd local G1_GestionCafeteria
+
+6. Iniciar el Servidor de Desarrollo
+   Una vez configurado todo, se inicia el servidor de desarrollo de Laravel con:
+      php artisan serve
+
+7. AÑADIR EN .gitignore
+   Dentro de la carpeta "database", ingresar a .gitignore y asegurarse de que incluya:
+      *.sqlite*
+      .env
