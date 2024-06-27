@@ -85,6 +85,9 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
    DB_USERNAME=root
    DB_PASSWORD=
 
+   Dentro de este archivo, se necesita ejecutar el siguiente comando para generar una APP_KEY (local):
+   php artisan key:generate
+
 3. Crear la Base de Datos en phpMyAdmin
    Abre phpMyAdmin en navegador
    Haz clic en "Nueva" en el panel de la izquierda.
