@@ -24,6 +24,7 @@ return new class extends Migration
                     ->constrained('categorias')
                     ->cascadeOnUpdate()
                     ->nullOnDelete();
+            $table->timestamps();
         });
     }
 
