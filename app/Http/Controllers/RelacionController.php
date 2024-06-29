@@ -10,6 +10,6 @@ class RelacionController extends Controller
 {
     public function index(){
         $productos = Producto::all();
-        return view('welcome', compact(productos));
+        return view('welcome', compact('productos')); // Aquí se corrigió el error
     }
 }
