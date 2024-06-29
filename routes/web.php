@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Route;
     return view('welcome');
 });*/
 
-Route::get ('/', 'App\Http\Controllers\RelacionController@index');
+Route::get('/', 'App\Http\Controllers\RelacionController@index');
 
-Route::get('/home',function(){
+Route::get('/home', function(){
     return view('home');
 });
