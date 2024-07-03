@@ -33,12 +33,8 @@ class InventarioResource extends Resource
                     ->label('Cantidad')
                     ->required()
                     ->numeric(),
-                Forms\Components\Select::make('estado_inv')
+                Forms\Components\TextInput::make('estado_inv')
                     ->label('Estado')
-                    ->options([
-                        'Disponible' => 'Disponible',
-                        'Agotado' => 'Agotado',
-                    ])
                     ->required(),
             ]);
     }
