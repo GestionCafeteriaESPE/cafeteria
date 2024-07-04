@@ -28,9 +28,9 @@ class PeDetalleResource extends Resource
         return $form
             ->schema([
                 TextInput::make('nombre_pdet')->required()->maxLength(100),
-                TextInput::make('precio_pdet')->required()->numeric(),
+                TextInput::make('precio_pdet')->required()->numeric()->prefix('$'),
                 TextInput::make('cantidad_pdet')->required()->numeric(),
-                TextInput::make('subtotal_pdet')->required()->numeric(),
+                TextInput::make('subtotal_pdet')->required()->numeric()->prefix('$'),
                 Select::make('id_ped')
                     ->relationship('pedido', 'nombre_ped')
                     ->searchable(),

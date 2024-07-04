@@ -9,7 +9,7 @@ class Pedido extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['fecha_ped', 'nombre_ped', 'cedula_ped', 'telefono_ped', 'email_ped', 'total_ped', 'id_cli'];
+    protected $fillable = ['fecha_ped', 'nombre_ped', 'cedula_ped', 'telefono_ped', 'email_ped', 'total_ped', 'id_cli', 'modoPago_ped', 'estado_ped'];
 
     public function cliente()
     {

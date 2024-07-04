@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
-            $table->string('fecha_ped');
+            $table->date('fecha_ped');
             $table->string('nombre_ped');
             $table->string('cedula_ped');
-            $table->string('telefono_ped');
-            $table->string('email_ped');
-            $table->float('total_ped');
+            $table->string('telefono_ped')->nullable();
+            $table->string('email_ped')->nullable();
+            $table->decimal('total_ped',6,2);
+            $table->string('modoPago_ped');
+            $table->boolean('estado_ped')->default(false);
             
             $table->foreignId('id_cli')
                     ->nullable()

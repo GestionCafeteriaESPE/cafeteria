@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PedidoResource\Pages;
 use App\Filament\Resources\PedidoResource\RelationManagers;
+use App\Models\Cliente;
 use App\Models\Pedido;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -15,8 +16,10 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\NumberColumn;
+use Filament\Tables\Columns\BooleanColumn;
 
 class PedidoResource extends Resource
 {
@@ -28,15 +31,46 @@ class PedidoResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('fecha_ped')->required(),
-                TextInput::make('nombre_ped')->required()->maxLength(100),
-                TextInput::make('cedula_ped')->required()->maxLength(20),
-                TextInput::make('telefono_ped')->required()->maxLength(15),
-                TextInput::make('email_ped')->required()->email()->maxLength(100),
-                TextInput::make('total_ped')->required()->numeric(),
-                Select::make('id_cli')
-                    ->relationship('cliente', 'nombre_cli')
-                    ->searchable(),
+                DatePicker::make('fecha_ped')->required(),
+                TextInput::make('nombre_ped')->required()->maxLength(50),
+                TextInput::make('cedula_ped')->required()->maxLength(10),
+                TextInput::make('telefono_ped')->maxLength(10),
+                TextInput::make('email_ped')->maxLength(30),
+                TextInput::make('total_ped')->required()->numeric()->prefix('$'),
+
+                Select::make('modoPago_ped')
+                    ->options([
+                        'Efectivo' => 'Efectivo',
+                        'Tarjeta' => 'Tarjeta',
+                        'Transferencia' => 'Transferencia',
+                    ])
+                    ->required(),
+                Select::make('estado_ped')
+                    ->options([
+                        1 => 'Pagado',
+                        0 => 'Pendiente',
+                    ])
+                    ->required(),
+                
+                // Repeater para PeDetalle
+                Forms\Components\Repeater::make('peDetalles')
+                    ->relationship()
+                    ->schema([
+                        Select::make('id_pro')
+                            ->relationship('producto', 'nombre_pro')
+                            ->required(),
+                        TextInput::make('cantidad_pdet')
+                            ->numeric()
+                            ->required(),
+                        TextInput::make('precio_pdet')
+                            ->numeric()
+                            ->required(),
+                        TextInput::make('subtotal_pdet')
+                            ->numeric()
+                            ->required(),
+                    ])
+                    ->columns(2)
+                    ->createItemButtonLabel('Añadir Detalle'),
             ]);
     }
 
@@ -50,6 +84,11 @@ class PedidoResource extends Resource
                 TextColumn::make('telefono_ped')->searchable(),
                 TextColumn::make('email_ped')->searchable(),
                 TextColumn::make('total_ped')->sortable(),
+                TextColumn::make('modoPago_ped')->searchable(),
+                TextColumn::make('estado_ped')
+                    ->label('Estado')
+                    ->formatStateUsing(fn (bool $state): string => $state ? 'Pagado' : 'Pendiente')
+                    ->sortable(),
                 TextColumn::make('cliente.nombre_cli')->label('Cliente')->sortable()->searchable(),
                 TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true)
@@ -81,5 +120,21 @@ class PedidoResource extends Resource
             'create' => Pages\CreatePedido::route('/create'),
             'edit' => Pages\EditPedido::route('/{record}/edit'),
         ];
+    }
+
+    protected function saving(Pedido $pedido, array $data): void
+    {
+        // Buscar o crear cliente por cédula
+        $cliente = Cliente::firstOrCreate(
+            ['cedula_cli' => $data['cedula_ped']],
+            [
+                'nombre_cli' => $data['nombre_ped'],
+                'telefono_cli' => $data['telefono_ped'],
+                'email_cli' => $data['email_ped'],
+            ]
+        );
+
+        // Asignar el id del cliente al pedido
+        $pedido->id_cli = $cliente->id;
     }
 }

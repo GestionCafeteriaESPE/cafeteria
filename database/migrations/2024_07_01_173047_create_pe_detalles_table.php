@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('pe_detalles', function (Blueprint $table) {
             $table->id();
             $table->string('nombre_pdet');
-            $table->float('precio_pdet');
+            $table->decimal('precio_pdet',6,2);
             $table->integer('cantidad_pdet');
-            $table->float('subtotal_pdet');
+            $table->decimal('subtotal_pdet',6,2);
             
             $table->foreignId('id_ped')
                     ->nullable()
