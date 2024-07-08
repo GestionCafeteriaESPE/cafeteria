@@ -17,9 +17,13 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BooleanColumn;
+use Filament\Actions\Action;
+use App\Models\Post;
+use App\Models\User;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class PedidoResource extends Resource
 {
@@ -31,14 +35,15 @@ class PedidoResource extends Resource
     {
         return $form
             ->schema([
-                DatePicker::make('fecha_ped')->required(),
-                TextInput::make('nombre_ped')->required()->maxLength(50),
-                TextInput::make('cedula_ped')->required()->maxLength(10),
-                TextInput::make('telefono_ped')->maxLength(10),
-                TextInput::make('email_ped')->maxLength(30),
-                TextInput::make('total_ped')->required()->numeric()->prefix('$'),
-
+                DatePicker::make('fecha_ped')->label('Fecha de Pedido')->required()->placeholder('YYYY-MM-DD'),
+                TextInput::make('cedula_cli')->label('Cédula del Cliente')->required()->maxLength(10)->disabled(fn ($get) => $get('is_cliente_found'))->hidden(fn ($get) => !$get('cedula_cli')),
+                TextInput::make('nombre_cli')->label('Nombre del Cliente')->disabled(fn ($get) => $get('is_cliente_found'))->required()->hidden(fn ($get) => !$get('cedula_cli')),
+                TextInput::make('telefono_cli')->label('Teléfono del Cliente')->disabled(fn ($get) => $get('is_cliente_found'))->required()->hidden(fn ($get) => !$get('cedula_cli')),
+                TextInput::make('email_cli')->label('E-mail del Cliente')->disabled(fn ($get) => $get('is_cliente_found'))->hidden(fn ($get) => !$get('cedula_cli')),
+                TextInput::make('total_ped')->label('Total')->required()->numeric()->prefix('$'),
+                TextInput::make('is_cliente_found')->hidden(),
                 Select::make('modoPago_ped')
+                    ->label('Modo de Pago')
                     ->options([
                         'Efectivo' => 'Efectivo',
                         'Tarjeta' => 'Tarjeta',
@@ -46,6 +51,7 @@ class PedidoResource extends Resource
                     ])
                     ->required(),
                 Select::make('estado_ped')
+                    ->label('Estado de Pedido')
                     ->options([
                         1 => 'Pagado',
                         0 => 'Pendiente',
@@ -56,18 +62,10 @@ class PedidoResource extends Resource
                 Forms\Components\Repeater::make('peDetalles')
                     ->relationship()
                     ->schema([
-                        Select::make('id_pro')
-                            ->relationship('producto', 'nombre_pro')
-                            ->required(),
-                        TextInput::make('cantidad_pdet')
-                            ->numeric()
-                            ->required(),
-                        TextInput::make('precio_pdet')
-                            ->numeric()
-                            ->required(),
-                        TextInput::make('subtotal_pdet')
-                            ->numeric()
-                            ->required(),
+                        Select::make('id_pro')->label('Producto')->relationship('producto', 'nombre_pro')->required(),
+                        TextInput::make('cantidad_pdet')->label('Cantidad')->numeric()->required(),
+                        TextInput::make('precio_pdet')->label('Precio')->numeric()->required()->prefix('$'),
+                        TextInput::make('subtotal_pdet')->label('Subtotal')->numeric()->required()->prefix('$'),
                     ])
                     ->columns(2)
                     ->createItemButtonLabel('Añadir Detalle'),
@@ -78,20 +76,16 @@ class PedidoResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('fecha_ped')->searchable(),
-                TextColumn::make('nombre_ped')->searchable(),
-                TextColumn::make('cedula_ped')->searchable(),
-                TextColumn::make('telefono_ped')->searchable(),
-                TextColumn::make('email_ped')->searchable(),
-                TextColumn::make('total_ped')->sortable(),
-                TextColumn::make('modoPago_ped')->searchable(),
+                TextColumn::make('fecha_ped')->label('Fecha de Pedido')->sortable(),
+                TextColumn::make('total_ped')->label('Total')->sortable(),
+                TextColumn::make('modoPago_ped')->label('Modo de Pago')->searchable(),
                 TextColumn::make('estado_ped')
                     ->label('Estado')
                     ->formatStateUsing(fn (bool $state): string => $state ? 'Pagado' : 'Pendiente')
                     ->sortable(),
                 TextColumn::make('cliente.nombre_cli')->label('Cliente')->sortable()->searchable(),
-                TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true)
+                TextColumn::make('created_at')->label('Creación del Pedido')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')->label('Actualización del Pedido')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true)
             ])
             ->filters([
                 //
@@ -122,15 +116,62 @@ class PedidoResource extends Resource
         ];
     }
 
+    protected function getActions(): array
+    {
+        return [
+            Action::make('verificarCedula')
+                ->label('Verificar Cédula')
+                ->form([
+                    TextInput::make('cedula_cli')->label('Cédula del Cliente')->required()->maxLength(10),
+                ])
+                ->action(function (array $data, callable $set) {
+                    try {
+                        $cliente = Cliente::where('cedula_cli', $data['cedula_cli'])->first();
+                        if ($cliente) {
+                            $set('cedula_cli', $cliente->cedula_cli);
+                            $set('nombre_cli', $cliente->nombre_cli);
+                            $set('telefono_cli', $cliente->telefono_cli);
+                            $set('email_cli', $cliente->email_cli);
+                            $set('is_cliente_found', true);
+                        } else {
+                            $set('cedula_cli', $data['cedula_cli']);
+                            $set('nombre_cli', '');
+                            $set('telefono_cli', '');
+                            $set('email_cli', '');
+                            $set('is_cliente_found', false);
+                        }
+                        $this->dispatchBrowserEvent('modal-closed');
+                    } catch (\Exception $e) {
+                        Log::error('Error verifying cedula', ['exception' => $e->getMessage()]);
+                        throw $e;
+                    }
+                })
+                ->color('primary')
+                ->modalButton('Verificar')
+                ->modalHeading('Verificar Cédula')
+        ];
+    }
+
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        $data['is_cliente_found'] = false;
+        return $data;
+    }
+
     protected function saving(Pedido $pedido, array $data): void
     {
+        // Asegura que 'nombre_cli' esté presente en $data
+        if (!isset($data['nombre_cli'])) {
+            // Manejar el caso donde 'nombre_cli' no está presente
+            throw new \Exception("El campo 'nombre_cli' no está presente en los datos.");
+        }
         // Buscar o crear cliente por cédula
         $cliente = Cliente::firstOrCreate(
-            ['cedula_cli' => $data['cedula_ped']],
+            ['cedula_cli' => $data['cedula_cli']],
             [
-                'nombre_cli' => $data['nombre_ped'],
-                'telefono_cli' => $data['telefono_ped'],
-                'email_cli' => $data['email_ped'],
+                'nombre_cli' => $data['nombre_cli'] ?? '',
+                'telefono_cli' => $data['telefono_cli'] ?? '',
+                'email_cli' => $data['email_cli'] ?? '',
             ]
         );
 

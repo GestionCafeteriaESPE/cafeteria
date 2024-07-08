@@ -26,10 +26,10 @@ class ClienteResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('nombre_cli')->required()->maxLength(50),
-                TextInput::make('cedula_cli')->required()->maxLength(10),
-                TextInput::make('email_cli')->required()->email()->maxLength(60),
-                TextInput::make('telefono_cli')->required()->maxLength(10),
+                TextInput::make('nombre_cli')->label('Nombre del Cliente')->required()->maxLength(70),
+                TextInput::make('cedula_cli')->label('Cédula del Cliente')->required()->maxLength(10),
+                TextInput::make('email_cli')->label('E-mail del Cliente')->email()->maxLength(60),
+                TextInput::make('telefono_cli')->label('Teléfono del Cliente')->required()->maxLength(10),
             ]);
     }
 
@@ -37,12 +37,12 @@ class ClienteResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('nombre_cli')->searchable(),
-                TextColumn::make('cedula_cli')->searchable(),
-                TextColumn::make('email_cli')->searchable(),
-                TextColumn::make('telefono_cli')->searchable(),
-                TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true)
+                TextColumn::make('nombre_cli')->label('Nombre del Cliente')->searchable(),
+                TextColumn::make('cedula_cli')->label('Cédula del Cliente')->searchable(),
+                TextColumn::make('email_cli')->label('E-mail del Cliente')->searchable(),
+                TextColumn::make('telefono_cli')->label('Teléfono del Cliente')->searchable(),
+                TextColumn::make('created_at')->label('Creación del Cliente')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')->label('Actualización del Cliente')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true)
             ])
             ->filters([
                 //
