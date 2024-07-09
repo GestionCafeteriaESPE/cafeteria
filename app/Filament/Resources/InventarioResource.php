@@ -25,7 +25,8 @@ class InventarioResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('nombre_inv')
                     ->label('Nombre del Inventario')
-                    ->required(),
+                    ->required()
+                    ->maxLength(70),
                 Forms\Components\Textarea::make('descripcion_inv')
                     ->label('Descripción')
                     ->nullable(),
@@ -35,7 +36,8 @@ class InventarioResource extends Resource
                     ->numeric(),
                 Forms\Components\TextInput::make('estado_inv')
                     ->label('Estado')
-                    ->required(),
+                    ->required()
+                    ->maxLength(60),
             ]);
     }
 

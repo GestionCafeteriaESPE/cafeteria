@@ -10,10 +10,10 @@ class CreateInventariosTable extends Migration
     {
         Schema::create('inventarios', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre_inv');
+            $table->string('nombre_inv',70);
             $table->text('descripcion_inv')->nullable();
             $table->integer('cantidad_inv');
-            $table->string('estado_inv');
+            $table->string('estado_inv',60);
             $table->timestamps();
         });
     }
