@@ -23,7 +23,7 @@ class EditPedido extends EditRecord
                 ->form([
                     TextInput::make('cedula_cli')->label('Cédula del Cliente')->required()->maxLength(10),
                 ])
-                ->action(function (array $data) {
+                ->action(function (array $data, callable $set) {
                     Log::info('Verificar cédula action triggered', ['data' => $data]);
 
                     try {
@@ -31,6 +31,7 @@ class EditPedido extends EditRecord
                         Log::info('Cliente query result', ['cliente' => $cliente]);
 
                         $this->fillClienteData($cliente);
+                        $this->emit('clienteVerificado');
                     } catch (\Exception $e) {
                         Log::error('Error verifying cedula', ['exception' => $e->getMessage()]);
                     }
@@ -64,28 +65,19 @@ class EditPedido extends EditRecord
         ];
     }
 
-    /*protected function mutateFormDataBeforeSave(array $data): array
-    {
-        // Buscar o crear el cliente
-        $cliente = Cliente::firstOrCreate(
-            ['cedula_cli' => $data['cedula_cli']],
-            [
-                'nombre_cli' => $data['nombre_cli'] ?? '',
-                'email_cli' => $data['email_cli'] ?? '',
-                'telefono_cli' => $data['telefono_cli'] ?? '',
-            ]
-        );
-
-        $data['id_cli'] = $cliente->id;
-
-        return $data;
-    }*/
-
     public function mount(string|int $record): void
     {
         parent::mount($record);
 
         $this->form->fill([
+            'cedula_cli' => $this->record ? $this->record->cedula_cli : '',
+            'nombre_cli' => $this->record ? $this->record->nombre_cli : '',
+            'telefono_cli' => $this->record ? $this->record->telefono_cli : '',
+            'email_cli' => $this->record ? $this->record->email_cli : '',
+            'total_ped' => $this->record ? $this->record->total_ped : '',
+            'modoPago_ped' => $this->record ? $this->record->modoPago_ped : '',
+            'estado_ped' => $this->record ? $this->record->estado_ped : '',
+            'fecha_ped' => $this->record ? $this->record->fecha_ped : date('Y-m-d'), // O la fecha actual si es nuevo
             'is_cliente_found' => false,
         ]);
     }

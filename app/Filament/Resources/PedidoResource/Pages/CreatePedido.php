@@ -28,9 +28,10 @@ class CreatePedido extends CreateRecord
                     try {
                         $cliente = Cliente::where('cedula_cli', $data['cedula_cli'])->first();
                         Log::info('Cliente query result', ['cliente' => $cliente]);
-
+                        
+                        //$this->emit('clienteVerificado');
                         $this->fillClienteData($cliente);
-                        $this->dispatchBrowserEvent('modal-closed');
+                        $this->emit('clienteVerificado');
                     } catch (\Exception $e) {
                         Log::error('Error verifying cedula', ['exception' => $e->getMessage()]);
                     }
@@ -57,30 +58,20 @@ class CreatePedido extends CreateRecord
         return array_merge($data, ['is_cliente_found' => false]);
     }
 
-    /*protected function mutateFormDataBeforeCreate(array $data): array
-    {
-        // Buscar o crear el cliente
-        $cliente = Cliente::firstOrCreate(
-            ['cedula_cli' => $data['cedula_cli']],
-            [
-                'nombre_cli' => $data['nombre_cli'] ?? '',
-                'email_cli' => $data['email_cli'] ?? '',
-                'telefono_cli' => $data['telefono_cli'] ?? '',
-            ]
-        );
-
-        // Asignar el id del cliente al pedido
-        $data['id_cli'] = $cliente->id;
-        
-        return $data;
-    }*/
-
     public function mount(): void
     {
         parent::mount();
 
         $this->form->fill([
-            'is_cliente_found' => false,
+        'cedula_cli' => '',
+        'nombre_cli' => '',
+        'telefono_cli' => '',
+        'email_cli' => '',
+        'total_ped' => 0,
+        'modoPago_ped' => 'Efectivo',
+        'estado_ped' => 0,
+        'fecha_ped' => date('Y-m-d'),
+        'is_cliente_found' => false,
         ]);
     }
 }

@@ -127,6 +127,7 @@ class PedidoResource extends Resource
                 ->action(function (array $data, callable $set) {
                     try {
                         $cliente = Cliente::where('cedula_cli', $data['cedula_cli'])->first();
+                        
                         if ($cliente) {
                             $set('cedula_cli', $cliente->cedula_cli);
                             $set('nombre_cli', $cliente->nombre_cli);
@@ -160,11 +161,6 @@ class PedidoResource extends Resource
 
     protected function saving(Pedido $pedido, array $data): void
     {
-        // Asegura que 'nombre_cli' esté presente en $data
-        if (!isset($data['nombre_cli'])) {
-            // Manejar el caso donde 'nombre_cli' no está presente
-            throw new \Exception("El campo 'nombre_cli' no está presente en los datos.");
-        }
         // Buscar o crear cliente por cédula
         $cliente = Cliente::firstOrCreate(
             ['cedula_cli' => $data['cedula_cli']],
