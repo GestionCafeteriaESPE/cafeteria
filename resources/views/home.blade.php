@@ -21,9 +21,9 @@
             <a href="#" class="text-gray-500 hover:text-gray-700">MENÚ</a>
             <a href="#" class="text-gray-500 hover:text-gray-700">INFORMACIÓN</a>
         </nav>
-        <button class="px-4 py-2 border border-gray-500 rounded-full text-gray-500 hover:text-gray-700 hover:border-gray-700">
+        <a href="{{ route('filament.admin.auth.login') }}" class="px-4 py-2 border border-gray-500 rounded-full text-gray-500 hover:text-gray-700 hover:border-gray-700 inline-block">
             Login
-        </button>
+        </a>
     </header>
     <main class="flex">
         <div style="width: 50%; background-color: #413E49; display: flex; justify-content: center; align-items: center;">

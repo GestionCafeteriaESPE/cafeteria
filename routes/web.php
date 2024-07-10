@@ -5,13 +5,14 @@
 
 
 use Illuminate\Support\Facades\Route;
+use Filament\Http\Controllers\Auth\LogoutController;
+use Livewire\Livewire;
 
-/*Route::get('/', function () {
-    return view('welcome');
-});*/
 
-Route::get('/', 'App\Http\Controllers\RelacionController@index');
-
-Route::get('/home', function(){
+Route::get('/', function () {
     return view('home');
+});
+
+Livewire::setUpdateRoute(function($handle){
+    return Route::post('/cafeteria/public/livewire/update',$handle);
 });
