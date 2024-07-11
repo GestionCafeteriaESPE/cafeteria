@@ -24,6 +24,8 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Livewire\Component;
+use Livewire\Attributes\On;
 
 class PedidoResource extends Resource
 {
@@ -141,7 +143,7 @@ class PedidoResource extends Resource
                             $set('email_cli', '');
                             $set('is_cliente_found', false);
                         }
-                        $this->dispatchBrowserEvent('modal-closed');
+                        $this->dispatch('clienteVerificado');
                     } catch (\Exception $e) {
                         Log::error('Error verifying cedula', ['exception' => $e->getMessage()]);
                         throw $e;
@@ -159,6 +161,7 @@ class PedidoResource extends Resource
         return $data;
     }
 
+    //#[On('clienteVerificado')] 
     protected function saving(Pedido $pedido, array $data): void
     {
         // Buscar o crear cliente por cédula

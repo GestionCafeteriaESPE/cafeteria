@@ -9,6 +9,8 @@ use App\Models\Cliente;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Support\Facades\Log;
+use Livewire\Livewire;
+use Livewire\Component;
 
 class CreatePedido extends CreateRecord
 {
@@ -29,9 +31,13 @@ class CreatePedido extends CreateRecord
                         $cliente = Cliente::where('cedula_cli', $data['cedula_cli'])->first();
                         Log::info('Cliente query result', ['cliente' => $cliente]);
                         
-                        //$this->emit('clienteVerificado');
+                        //$this->emit('clienteVerificado'); //No bloquea pero no muestra nada
                         $this->fillClienteData($cliente);
-                        $this->emit('clienteVerificado');
+                        //Livewire::emit('clienteVerificado');
+                        $this->dispatch('clienteVerificado');
+                        //$this->dispatchBrowserEvent('clienteVerificado'); // Emitir evento para cerrar modal
+                        //Livewire::dispatch('clienteVerificado'); // Emitir evento para cerrar modal
+                        //$this->emit('clienteVerificado'); //Si bloquea pero muestra datos
                     } catch (\Exception $e) {
                         Log::error('Error verifying cedula', ['exception' => $e->getMessage()]);
                     }

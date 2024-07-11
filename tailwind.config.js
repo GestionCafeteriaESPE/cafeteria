@@ -1,3 +1,5 @@
+import preset from './vendor/filament/support/tailwind.config.preset';
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{html,js}"],
@@ -6,8 +8,6 @@ module.exports = {
   },
   plugins: [],
 }
-
-import preset from './vendor/filament/support/tailwind.config.preset'
  
 export default {
     presets: [preset],
