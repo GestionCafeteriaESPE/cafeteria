@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('egresos', function (Blueprint $table) {
             $table->id();
             $table->date('fecha_Egr');
-            $table->string('descripcion_Egr');
-            $table->integer('cantidad_Egr');
+            $table->string('descripcion_Egr',60);
+            $table->decimal('cantidad_Egr',8,2);
             $table->timestamps();
         });
     }
