@@ -37,28 +37,62 @@ class PedidoResource extends Resource
     {
         return $form
             ->schema([
-                DatePicker::make('fecha_ped')->label('Fecha de Pedido')->required()->placeholder('YYYY-MM-DD'),
-                TextInput::make('cedula_cli')->label('Cédula del Cliente')->required()->maxLength(10)->disabled(fn ($get) => $get('is_cliente_found'))->hidden(fn ($get) => !$get('cedula_cli')),
-                TextInput::make('nombre_cli')->label('Nombre del Cliente')->disabled(fn ($get) => $get('is_cliente_found'))->required()->hidden(fn ($get) => !$get('cedula_cli')),
-                TextInput::make('telefono_cli')->label('Teléfono del Cliente')->disabled(fn ($get) => $get('is_cliente_found'))->required()->hidden(fn ($get) => !$get('cedula_cli')),
-                TextInput::make('email_cli')->label('E-mail del Cliente')->disabled(fn ($get) => $get('is_cliente_found'))->hidden(fn ($get) => !$get('cedula_cli')),
-                TextInput::make('total_ped')->label('Total')->required()->numeric()->prefix('$'),
-                TextInput::make('is_cliente_found')->hidden(),
-                Select::make('modoPago_ped')
-                    ->label('Modo de Pago')
-                    ->options([
-                        'Efectivo' => 'Efectivo',
-                        'Tarjeta' => 'Tarjeta',
-                        'Transferencia' => 'Transferencia',
-                    ])
-                    ->required(),
-                Select::make('estado_ped')
-                    ->label('Estado de Pedido')
-                    ->options([
-                        1 => 'Pagado',
-                        0 => 'Pendiente',
-                    ])
-                    ->required(),
+                Forms\Components\Section::make('Datos de cliente')
+                ->description('Ingrese la cédula del cliente y seleccione los productos. Si ya ha realizado una compra, se reflejarán automáticamente los datos del cliente. En caso de ser un nuevo cliente, los campos se activarán para el ingreso de datos.')
+                ->schema([
+                    TextInput::make('cedula_cli')->label('Cédula del Cliente')->required()->maxLength(10)
+                        ->afterStateUpdated(function ($state, callable $set) {
+                            if ($cliente = \App\Models\Cliente::where('cedula_cli', $state)->first()) {
+                                $set('nombre_cli', $cliente->nombre_cli);
+                                $set('telefono_cli', $cliente->telefono_cli);
+                                $set('email_cli', $cliente->email_cli);
+                                $set('is_cliente_found', true);
+                            } else {
+                                $set('nombre_cli', '');
+                                $set('telefono_cli', '');
+                                $set('email_cli', '');
+                                $set('is_cliente_found', false);
+                            }
+                        }),
+                    TextInput::make('nombre_cli')->label('Nombre del Cliente')->disabled(fn ($get) => $get('is_cliente_found'))->required()->hidden(fn ($get) => !$get('cedula_cli')),
+                    TextInput::make('telefono_cli')->label('Teléfono del Cliente')->disabled(fn ($get) => $get('is_cliente_found'))->required()->hidden(fn ($get) => !$get('cedula_cli')),
+                    TextInput::make('email_cli')->label('E-mail del Cliente')->disabled(fn ($get) => $get('is_cliente_found'))->hidden(fn ($get) => !$get('cedula_cli')),
+                    TextInput::make('is_cliente_found')->hidden(),                    
+                ])->columns(4),
+
+                Forms\Components\Section::make('Datos de pedido')
+                ->description('Ingrese los datos del pedido.')
+                ->schema([
+                    DatePicker::make('fecha_ped')->label('Fecha de Pedido')->required()->placeholder('YYYY-MM-DD'),
+                    Select::make('modoPago_ped')
+                        ->label('Modo de Pago')
+                        ->options([
+                            'Efectivo' => 'Efectivo',
+                            'Tarjeta' => 'Tarjeta',
+                            'Transferencia' => 'Transferencia',
+                        ])
+                        ->required(),
+                    Select::make('estado_ped')
+                        ->label('Estado de Pedido')
+                        ->options([
+                            1 => 'Pagado',
+                            0 => 'Pendiente',
+                        ])
+                        ->required(),
+                    TextInput::make('total_ped')->label('Total')->required()->numeric()->prefix('$')->disabled(true),
+                ])->columns(4),
+
+                /* Utiliza el componente Livewire para la verificación de la cédula
+                Forms\Components\View::make('livewire.buscar-cliente')->label('Verificar Cédula'),*/
+                
+                /*Forms\Components\Livewire::make('buscar-cliente'),
+                /*->label('Datos del Cliente')
+                ->schema([
+                    TextInput::make('cedula_cli')->label('Cédula del Cliente')->required()->maxLength(10),
+                    TextInput::make('nombre_cli')->label('Nombre del Cliente')->required(),
+                    TextInput::make('telefono_cli')->label('Teléfono del Cliente')->required(),
+                    TextInput::make('email_cli')->label('E-mail del Cliente'),
+                ]),*/
                 
                 // Repeater para PeDetalle
                 Forms\Components\Repeater::make('peDetalles')
@@ -69,8 +103,8 @@ class PedidoResource extends Resource
                         TextInput::make('precio_pdet')->label('Precio')->numeric()->required()->prefix('$'),
                         TextInput::make('subtotal_pdet')->label('Subtotal')->numeric()->required()->prefix('$'),
                     ])
-                    ->columns(2)
-                    ->createItemButtonLabel('Añadir Detalle'),
+                    ->columns(4)
+                    ->createItemButtonLabel('Añadir Producto'),
             ]);
     }
 
@@ -118,6 +152,30 @@ class PedidoResource extends Resource
         ];
     }
 
+    // Método para verificar la cédula
+    public function verificarCedula(array $data, callable $set)
+    {
+        try {
+            $cliente = Cliente::where('cedula_cli', $data['cedula_cli'])->first();
+
+            if ($cliente) {
+                $set('nombre_cli', $cliente->nombre_cli);
+                $set('telefono_cli', $cliente->telefono_cli);
+                $set('email_cli', $cliente->email_cli);
+                $set('is_cliente_found', true);
+            } else {
+                $set('nombre_cli', '');
+                $set('telefono_cli', '');
+                $set('email_cli', '');
+                $set('is_cliente_found', false);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error verifying cedula', ['exception' => $e->getMessage()]);
+            throw $e;
+        }
+    }
+
+    /*
     protected function getActions(): array
     {
         return [
@@ -176,5 +234,5 @@ class PedidoResource extends Resource
 
         // Asignar el id del cliente al pedido
         $pedido->id_cli = $cliente->id;
-    }
+    }*/
 }

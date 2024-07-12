@@ -22,7 +22,11 @@
  
     <body class="antialiased">
         {{ $slot }}
- 
+
+
+        <div id="app">
+            @yield('content')
+        </div>
         @filamentScripts
         @vite(['resources/js/app.js', 'resources/js/custom.js'])
         @livewireScripts

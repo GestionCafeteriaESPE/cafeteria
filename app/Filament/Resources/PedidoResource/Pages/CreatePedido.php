@@ -16,7 +16,19 @@ class CreatePedido extends CreateRecord
 {
     protected static string $resource = PedidoResource::class;
 
-    protected function getActions(): array
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $cliente = Cliente::firstOrCreate(
+            ['cedula_cli' => $data['cedula_cli']],
+            ['nombre_cli' => $data['nombre_cli'], 'telefono_cli' => $data['telefono_cli'], 'email_cli' => $data['email_cli']]
+        );
+
+        $data['id_cli'] = $cliente->id;
+
+        return $data;
+    }
+
+    /*protected function getActions(): array
     {
         return [
             Action::make('verificarCedula')
@@ -79,5 +91,5 @@ class CreatePedido extends CreateRecord
         'fecha_ped' => date('Y-m-d'),
         'is_cliente_found' => false,
         ]);
-    }
+    }*/
 }
