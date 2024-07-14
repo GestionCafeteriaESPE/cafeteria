@@ -9,4 +9,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateCategoria extends CreateRecord
 {
     protected static string $resource = CategoriaResource::class;
+
+    protected function getRedirectUrl(): string  // Asegúrate de cambiar el tipo de retorno a string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }
