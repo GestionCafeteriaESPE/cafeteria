@@ -56,6 +56,7 @@ class InventarioResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -70,6 +71,7 @@ class InventarioResource extends Resource
             'index' => Pages\ListInventarios::route('/'),
             'create' => Pages\CreateInventario::route('/create'),
             'edit' => Pages\EditInventario::route('/{record}/edit'),
+            'vista' => Pages\ViewInventario::route('/{record}'),
         ];
     }
 }
