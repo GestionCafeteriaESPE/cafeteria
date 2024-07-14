@@ -6,11 +6,13 @@ use App\Filament\Resources\PedidoResource;
 use Filament\Actions;
 use Filament\Actions\Action;
 use App\Models\Cliente;
+use App\Models\PeDetalle;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Support\Facades\Log;
 use Livewire\Livewire;
 use Livewire\Component;
+
 
 class CreatePedido extends CreateRecord
 {
@@ -18,12 +20,51 @@ class CreatePedido extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $cliente = Cliente::firstOrCreate(
-            ['cedula_cli' => $data['cedula_cli']],
-            ['nombre_cli' => $data['nombre_cli'], 'telefono_cli' => $data['telefono_cli'], 'email_cli' => $data['email_cli']]
-        );
+        // Verificar si los datos del cliente están definidos y no están vacíos
+        $cedulaCli = $data['cedula_cli'] ?? null;
+        $nombreCli = $data['nombre_cli'] ?? '';
+        $telefonoCli = $data['telefono_cli'] ?? '';
+        $emailCli = $data['email_cli'] ?? '';
 
-        $data['id_cli'] = $cliente->id;
+        if ($cedulaCli) {
+            $cliente = Cliente::firstOrCreate(
+                ['cedula_cli' => $cedulaCli],
+                ['nombre_cli' => $nombreCli, 'telefono_cli' => $telefonoCli, 'email_cli' => $emailCli]
+            );
+
+            $data['id_cli'] = $cliente->id;
+        } else {
+            throw new \Exception("La cédula del cliente no puede estar vacía");
+        }
+
+        // Asegurar que cada detalle de pedido tenga `precio_pdet` y `subtotal_pdet` configurados
+        if (isset($data['peDetalles'])) {
+            $detallesActualizados = [];
+
+            foreach ($data['peDetalles'] as $detalle) {
+                $producto = Producto::find($detalle['id_pro']);
+                if ($producto) {
+                    $detalleActualizado = [
+                        'id_pro' => $detalle['id_pro'],
+                        'cantidad_pdet' => $detalle['cantidad_pdet'],
+                        'precio_pdet' => $producto->precio_pro,
+                        'subtotal_pdet' => $producto->precio_pro * $detalle['cantidad_pdet'],
+                    ];
+
+                    Log::info('Detalle actualizado', $detalleActualizado); // Log para depuración
+
+                    $detallesActualizados[] = $detalleActualizado;
+                } else {
+                    throw new \Exception("Producto no encontrado para el detalle del pedido");
+                }
+            }
+
+            $data['peDetalles'] = $detallesActualizados;
+        }else {
+            Log::error('Detalles de pedido no encontrados en los datos', $data); // Log para depuración
+        }
+
+        Log::info('Datos antes de crear pedido', $data); // Log para depuración
 
         return $data;
     }

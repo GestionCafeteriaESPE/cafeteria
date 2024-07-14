@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ProductoResource\Pages;
 use App\Filament\Resources\ProductoResource\RelationManagers;
 use App\Models\Producto;
+use App\Models\Categoria;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -32,15 +33,20 @@ class ProductoResource extends Resource
                 Forms\Components\TextInput::make('precio_pro')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('disponibilidad_pro')
-                    ->required()
-                    ->maxLength(191),
+                Forms\Components\Select::make('disponibilidad_pro')
+                    ->label('Disponibilidad del producto')
+                    ->options([
+                        1 => 'Disponible',
+                        0 => 'No disponible',
+                    ])
+                    ->required(),
                 Forms\Components\TextInput::make('imagenRef_pro')
                     ->required()
                     ->maxLength(191),
-                Forms\Components\TextInput::make('id_categoria')
-                    ->numeric()
-                    ->default(null),
+                Forms\Components\Select::make('id_categoria')
+                    ->label('Categoria')
+                    ->relationship('categoria', 'nombre_cat')
+                    ->required(),
             ]);
     }
 
@@ -53,14 +59,13 @@ class ProductoResource extends Resource
                 Tables\Columns\TextColumn::make('descripcion_pro')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('precio_pro')
-                    ->numeric()
-                    ->sortable(),
+                    ->numeric(),
                 Tables\Columns\TextColumn::make('disponibilidad_pro')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('imagenRef_pro')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('id_categoria')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('categoria.nombre_cat')
+                    ->label('Categoria')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
