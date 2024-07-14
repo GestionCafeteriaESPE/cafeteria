@@ -26,7 +26,7 @@ class Pedido extends Model
     protected function casts(): array
     {
         return [
-            'peDetalles' => 'array',
+            'pe_detalles' => 'array',
         ];
     }
 }

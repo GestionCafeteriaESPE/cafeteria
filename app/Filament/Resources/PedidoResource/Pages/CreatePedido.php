@@ -7,6 +7,7 @@ use Filament\Actions;
 use Filament\Actions\Action;
 use App\Models\Cliente;
 use App\Models\PeDetalle;
+use App\Models\Pedido;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Support\Facades\Log;
@@ -17,6 +18,11 @@ use Livewire\Component;
 class CreatePedido extends CreateRecord
 {
     protected static string $resource = PedidoResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {

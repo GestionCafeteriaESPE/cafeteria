@@ -20,7 +20,6 @@ use Filament\Tables\Columns\TextColumn;
 class PeDetalleResource extends Resource
 {
     protected static ?string $model = PeDetalle::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
