@@ -28,8 +28,11 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
-            ])
+                'primary' => 'rgb(240, 179, 158)',
+            ])->viteTheme('resources/css/filament/admin/theme.css')
+            ->font ('Arvo')//Fuente 
+            ->brandLogo(asset('imagenes/Logo.png'))
+            ->favicon(asset('imagenes/Logo.png'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
