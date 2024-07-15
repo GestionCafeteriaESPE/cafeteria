@@ -20,14 +20,12 @@ use Filament\Tables\Columns\TextColumn;
 class PeDetalleResource extends Resource
 {
     protected static ?string $model = PeDetalle::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('nombre_pdet')->required()->maxLength(100),
                 TextInput::make('precio_pdet')->required()->numeric()->prefix('$'),
                 TextInput::make('cantidad_pdet')->required()->numeric(),
                 TextInput::make('subtotal_pdet')->required()->numeric()->prefix('$'),
@@ -44,7 +42,6 @@ class PeDetalleResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('nombre_pdet')->searchable(),
                 TextColumn::make('precio_pdet')->sortable(),
                 TextColumn::make('cantidad_pdet')->sortable(),
                 TextColumn::make('subtotal_pdet')->sortable(),

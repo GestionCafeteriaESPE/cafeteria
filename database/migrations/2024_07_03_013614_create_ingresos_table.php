@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->date('fecha_ing');
             $table->string('descripcion_ing',150);
-            $table->integer('cantidad_ing');
-            
+            $table->decimal('cantidad_ing',8,2);
             $table->timestamps();
         });
     }

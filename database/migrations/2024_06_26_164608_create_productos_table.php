@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nombre_pro');
             $table->string('descripcion_pro');
             $table->float('precio_pro');
-            $table->string('disponibilidad_pro');
+            $table->boolean('disponibilidad_pro')->default(true);
             $table->string('imagenRef_pro');
             
             $table->foreignId('id_categoria')

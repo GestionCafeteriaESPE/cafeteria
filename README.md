@@ -64,7 +64,7 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# G1_GestionCafeteria
+# cafeteria
 
 ## --------------------------------------------------------------------------
 
@@ -72,8 +72,8 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 1. Clonar el repositorio:
    ```bash
-   git clone https://github.com/GestionCafeteriaESPE/G1_GestionCafeteria.git
-   cd G1_GestionCafeteria.git
+   git clone https://github.com/GestionCafeteriaESPE/cafeteria.git
+   cd cefeteria.git
 
 2. Configurar el Archivo .env
    Copia el archivo de ejemplo ".env.example" y crea un ".env". Configúralo con las credenciales de tu entorno local:
@@ -98,6 +98,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 4. Instalar Dependencias
    composer install
    npm install
+   npm run build
 
 5. Ejecutar Migraciones y Seeders
    Para crear las tablas y poblar la base de datos con datos iniciales, ejecuta el siguiente comando:
