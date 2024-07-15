@@ -5,6 +5,8 @@ namespace App\Providers\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use App\Filament\Resources\WidgetResource\Widgets\EgresostWidget;
+use App\Filament\Resources\WidgetResource\Widgets\EgresosStat;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -28,17 +30,22 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
-            ])
+                'primary' => 'rgb(240, 179, 158)',
+            ])->viteTheme('resources/css/filament/admin/theme.css')
+            ->font ('Arvo')//Fuente 
+            ->brandLogo(asset('imagenes/Logo.png'))
+            ->favicon(asset('imagenes/Logo.png'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->discoverWidgets(app_path('Filament/Resources/WidgetResource/Widgets'), 'App\\Filament\\Resources\\WidgetResource\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
+                EgresostWidget::class,
+                EgresosStat::class,
             ])
             ->middleware([
                 EncryptCookies::class,

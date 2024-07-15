@@ -13,6 +13,10 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+
 class EgresoResource extends Resource
 {
     protected static ?string $model = Egreso::class;
@@ -23,15 +27,9 @@ class EgresoResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('fecha_Egr')
-                    ->required()
-                    ->maxLength(191),
-                Forms\Components\TextInput::make('descripcion_Egr')
-                    ->required()
-                    ->maxLength(191),
-                Forms\Components\TextInput::make('cantidad_Egr')
-                    ->required()
-                    ->numeric(),
+                DatePicker::make('fecha_Egr')->label('Fecha de egreso')->required()->placeholder('YYYY-MM-DD'),
+                TextInput::make('descripcion_Egr')->label('Descripción de egreso')->maxLength(60)->required(),
+                TextInput::make('cantidad_Egr')->label('Cantidad de egreso')->numeric()->prefix('$')->required()
                 
             ]);
     }
@@ -40,13 +38,11 @@ class EgresoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('fecha_Egr')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('descripcion_Egr')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('cantidad_Egr')
-                    ->searchable(),
-                    Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('fecha_Egr')->label('Fecha de egreso')->sortable()->searchable(),
+                TextColumn::make('descripcion_Egr')->label('Descripción de egreso')->sortable()->searchable(),
+                TextColumn::make('cantidad_Egr')->label('Cantidad de egreso')->sortable()->searchable(),
+                
+                Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

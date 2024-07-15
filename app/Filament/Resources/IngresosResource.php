@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\IngresosResource\Pages;
@@ -28,10 +29,12 @@ class IngresosResource extends Resource
                     ->placeholder('YYYY-MM-DD'),
 
                 TextInput::make('descripcion_ing')
+                    ->label('Descripción')
                     ->required()
-                    ->maxLength(191),
+                    ->maxLength(150),
 
                 TextInput::make('cantidad_ing')
+                    ->label('Cantidad')
                     ->required()
                     ->numeric(),
             ]);
@@ -46,9 +49,11 @@ class IngresosResource extends Resource
                     ->sortable(),  // Puedes añadir sortable si necesitas
 
                 Tables\Columns\TextColumn::make('descripcion_ing')
+                    ->label('Descripción')
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('cantidad_ing')
+                    ->label('Cantidad')
                     ->numeric()
                     ->sortable(),
             ])
