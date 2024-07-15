@@ -5,6 +5,8 @@ namespace App\Providers\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use App\Filament\Resources\WidgetResource\Widgets\EgresostWidget;
+use App\Filament\Resources\WidgetResource\Widgets\EgresosStat;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -38,10 +40,12 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->discoverWidgets(app_path('Filament/Resources/WidgetResource/Widgets'), 'App\\Filament\\Resources\\WidgetResource\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
+                EgresostWidget::class,
+                EgresosStat::class,
             ])
             ->middleware([
                 EncryptCookies::class,

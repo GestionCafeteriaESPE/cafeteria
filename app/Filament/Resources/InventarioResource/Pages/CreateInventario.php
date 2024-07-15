@@ -10,4 +10,9 @@ class CreateInventario extends CreateRecord
 {
     protected static string $resource = InventarioResource::class;
 
+    protected function getTedirectUrl(): string 
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
 }
