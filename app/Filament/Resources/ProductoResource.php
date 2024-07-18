@@ -14,6 +14,19 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+use Filament\Forms\Components\FileUpload;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ImageColumn;
+
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
+
 class ProductoResource extends Resource
 {
     protected static ?string $model = Producto::class;
@@ -24,29 +37,38 @@ class ProductoResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nombre_pro')
-                    ->required()
-                    ->maxLength(191),
-                Forms\Components\TextInput::make('descripcion_pro')
-                    ->required()
-                    ->maxLength(191),
-                Forms\Components\TextInput::make('precio_pro')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\Select::make('disponibilidad_pro')
-                    ->label('Disponibilidad del producto')
-                    ->options([
-                        1 => 'Disponible',
-                        0 => 'No disponible',
-                    ])
-                    ->required(),
-                Forms\Components\TextInput::make('imagenRef_pro')
-                    ->required()
-                    ->maxLength(191),
-                Forms\Components\Select::make('id_categoria')
-                    ->label('Categoria')
-                    ->relationship('categoria', 'nombre_cat')
-                    ->required(),
+                Forms\Components\Section::make('Datos de producto')
+                    ->description('Ingrese los datos del nuevo producto del menú.')
+                        ->schema([
+                            TextInput::make('nombre_pro')->label('Nombre')->required()->maxLength(60),
+                            TextInput::make('descripcion_pro')->label('Descripción de producto')->required()->maxLength(150),
+                            TextInput::make('precio_pro')->label('Precio unitario')->numeric()->required()->prefix('$'),
+                            Select::make('disponibilidad_pro')
+                                ->label('Disponibilidad del producto')
+                                ->options([
+                                    1 => 'Disponible',
+                                    0 => 'No disponible',
+                                ])
+                                ->required(),
+                            Select::make('id_categoria')->label('Categoria')->relationship('categoria', 'nombre_cat')->required(),
+                            FileUpload::make('imagenRef_pro')->label('Imagen del Producto')->required()
+                                ->image()
+                                ->imageEditor()
+                                ->imageEditorAspectRatios([
+                                    null,
+                                    '16:9',
+                                    '4:3',
+                                    '1:1',
+                                ])
+                                ->uploadingMessage('Cargando imagen...')
+                                ->directory('\imagenes\Producto')
+                                ->maxSize(2048) // tamaño máximo del archivo en KB
+                                ->getUploadedFileNameForStorageUsing(
+                                    fn (TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
+                                        ->prepend('prod-'),
+                                ),
+
+                        ]),
             ]);
     }
 
@@ -54,24 +76,19 @@ class ProductoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nombre_pro')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('descripcion_pro')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('precio_pro')
-                    ->numeric(),
-                Tables\Columns\TextColumn::make('disponibilidad_pro')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('imagenRef_pro')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('categoria.nombre_cat')
-                    ->label('Categoria')
+                TextColumn::make('nombre_pro')->label('Nombre')->searchable(),
+                TextColumn::make('descripcion_pro')->label('Descripción')->searchable(),
+                TextColumn::make('precio_pro')->label('Precio')->numeric(),
+                TextColumn::make('disponibilidad_pro')->label('Disponibilidad')
+                    ->formatStateUsing(fn (bool $state): string => $state ? 'Disponible' : 'No disponible')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                ImageColumn::make('imagenRef_pro')->label('Imagen')->width(50)->height(50),
+                TextColumn::make('categoria.nombre_cat')->label('Categoria')->sortable(),
+                TextColumn::make('created_at')->label('Creado')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')->label('Actualizado')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -80,12 +97,42 @@ class ProductoResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->label('Ver')
+                    ->icon('heroicon-o-eye')
+                    ->color('secondary'),
+                Tables\Actions\EditAction::make()
+                    ->label('Editar')
+                    ->icon('heroicon-o-pencil')
+                    ->color('primary'),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Eliminar')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                    ->label('Eliminar seleccionados')
+                    ->color('danger'),
                 ]),
+            ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make('Datos de producto')
+                    ->schema([
+                        TextEntry::make('nombre_pro')->label('Nombre'),
+                        TextEntry::make('descripcion_pro')->label('Descripción'),
+                        TextEntry::make('precio_pro')->label('Precio unitario'),
+                        TextEntry::make('disponibilidad_pro')->label('Disponibilidad'),
+                        TextEntry::make('categoria.nombre_cat')->label('Categoría'),
+                        ImageEntry::make('imagenRef_pro')->label('Imagen del Producto')->width(150)->height(150),
+                    ])
+                    ->columns(3),
             ]);
     }
 

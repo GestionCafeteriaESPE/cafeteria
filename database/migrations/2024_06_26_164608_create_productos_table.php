@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('productos', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre_pro');
-            $table->string('descripcion_pro');
-            $table->float('precio_pro');
+            $table->string('nombre_pro', 60);
+            $table->string('descripcion_pro', 150);
+            $table->decimal('precio_pro',6,2);
             $table->boolean('disponibilidad_pro')->default(true);
-            $table->string('imagenRef_pro');
+            $table->string('imagenRef_pro', 260);
             
             $table->foreignId('id_categoria')
                     ->nullable()
