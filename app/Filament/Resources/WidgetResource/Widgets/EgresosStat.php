@@ -4,7 +4,6 @@ namespace App\Filament\Resources\WidgetResource\Widgets;
 
 use App\Models\Egreso;
 use App\Models\Ingresos;
-use App\Models\Pedido;
 use App\Models\Producto;
 
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
@@ -21,7 +20,6 @@ class EgresosStat extends BaseWidget
         return[
             Stat::make('Total de Egresos', "$" . number_format($totalEgresos, 2)),
             Stat::make('Total de Ingresos', "$" . number_format($totalIngresos, 2)),
-
         ];
 
     }
