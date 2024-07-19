@@ -2,29 +2,28 @@
 
 namespace App\Filament\Resources\WidgetResource\Widgets;
 
-use App\Models\Egreso;
+use App\Models\Ingresos;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 
-class EgresostWidget extends ChartWidget
+class IngresoWidget extends ChartWidget
 {
-    protected static ?string $heading = 'Gasto por Fecha';
+    protected static ?string $heading = 'Ingresos';
 
     protected function getData(): array
     {
-        $egresos = Egreso::select(DB::raw('DATE(fecha_Egr) as date'), DB::raw('SUM(cantidad_Egr) as total'))
+        $ingresos = Ingresos::select(DB::raw('DATE(fecha_Ing) as date'), DB::raw('SUM(cantidad_Ing) as total'))
             ->groupBy('date')
             ->orderBy('date', 'asc')
             ->get();
-
         return [
             'datasets' => [
                 [
-                    'label' => 'Egresos', 
-                    'data' => $egresos->pluck('total')->toArray(),     
+                    'label' => 'Ingresos', 
+                    'data' => $ingresos->pluck('total')->toArray(),     
                 ],
             ],
-            'labels' => $egresos->pluck('date')->map(fn($date) => date('Y/m/d', strtotime($date)))->toArray(),
+            'labels' => $ingresos->pluck('date')->map(fn($date) => date('Y/m/d', strtotime($date)))->toArray(),
         ];
     }
 
