@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class EgresostWidget extends ChartWidget
 {
-    protected static ?string $heading = 'Gasto por Fecha';
+    protected static ?string $heading = 'Egresos';
 
     protected function getData(): array
     {
