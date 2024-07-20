@@ -63,47 +63,14 @@ class PedidoResource extends Resource
                             }),
                         TextInput::make('nombre_cli')->label('Nombres y Apellidos')->maxLength(70)->live(onBlur: true)->disabled(fn ($get) => $get('is_cliente_found'))->required()->hidden(fn ($get) => !$get('cedula_cli'))
                             ->afterStateUpdated(function ($state, callable $get, callable $set) {
-                                if ($cliente = \App\Models\Cliente::where('cedula_cli', $state)->first()) {
-                                    $set('nombre_cli', $cliente->nombre_cli);
-                                    $set('telefono_cli', $cliente->telefono_cli);
-                                    $set('email_cli', $cliente->email_cli);
-                                    $set('is_cliente_found', true);
-                                } else {
-                                    $set('nombre_cli', '');
-                                    $set('telefono_cli', '');
-                                    $set('email_cli', '');
-                                    $set('is_cliente_found', false);
-                                }
                                 self::updateTotal($get, $set);
                             }),
                         TextInput::make('telefono_cli')->label('Número de Teléfono')->maxLength(10)->live(onBlur: true)->disabled(fn ($get) => $get('is_cliente_found'))->required()->hidden(fn ($get) => !$get('cedula_cli'))
                             ->afterStateUpdated(function ($state, callable $get, callable $set) {
-                                if ($cliente = \App\Models\Cliente::where('cedula_cli', $state)->first()) {
-                                    $set('nombre_cli', $cliente->nombre_cli);
-                                    $set('telefono_cli', $cliente->telefono_cli);
-                                    $set('email_cli', $cliente->email_cli);
-                                    $set('is_cliente_found', true);
-                                } else {
-                                    $set('nombre_cli', '');
-                                    $set('telefono_cli', '');
-                                    $set('email_cli', '');
-                                    $set('is_cliente_found', false);
-                                }
                                 self::updateTotal($get, $set);
                             }),
                         TextInput::make('email_cli')->label('Dirección E-mail')->maxLength(60)->live(onBlur: true)->disabled(fn ($get) => $get('is_cliente_found'))->hidden(fn ($get) => !$get('cedula_cli'))
                             ->afterStateUpdated(function ($state, callable $get, callable $set) {
-                                if ($cliente = \App\Models\Cliente::where('cedula_cli', $state)->first()) {
-                                    $set('nombre_cli', $cliente->nombre_cli);
-                                    $set('telefono_cli', $cliente->telefono_cli);
-                                    $set('email_cli', $cliente->email_cli);
-                                    $set('is_cliente_found', true);
-                                } else {
-                                    $set('nombre_cli', '');
-                                    $set('telefono_cli', '');
-                                    $set('email_cli', '');
-                                    $set('is_cliente_found', false);
-                                }
                                 self::updateTotal($get, $set);
                             }),
                         TextInput::make('is_cliente_found')->hidden(),
@@ -140,7 +107,7 @@ class PedidoResource extends Resource
                             }),
                     ])
                     ->columns(4),
-                
+
                 // Los detalles de pedido (Repeater)
                 Forms\Components\Section::make('Productos de Pedido')
                     ->description('Ingrese los productos dentro de este pedido')
@@ -151,35 +118,38 @@ class PedidoResource extends Resource
                             ->relationship()
                             ->schema([
                                 Select::make('id_pro')->label('Producto')->required()->live(debounce: 400)
-                                ->relationship('producto', 'nombre_pro')
-                                ->options(
-                                    $productos->mapWithKeys(function (Producto $producto) {
-                                        return [$producto->id => sprintf('%s ($%s)', $producto->nombre_pro, $producto->precio_pro)];
+                                    ->relationship('producto', 'nombre_pro')
+                                    ->options(
+                                        $productos->mapWithKeys(function (Producto $producto) {
+                                            return [$producto->id => sprintf('%s ($%s)', $producto->nombre_pro, $producto->precio_pro)];
+                                        })
+                                    )
+                                    ->disableOptionWhen(function ($value, $state, callable $get) {
+                                        return collect($get('../*.id_pro'))
+                                            ->reject(fn ($id) => $id == $state)
+                                            ->filter()
+                                            ->contains($value);
                                     })
-                                )
-                                ->disableOptionWhen(function ($value, $state, callable $get) {
-                                    return collect($get('../*.id_pro'))
-                                        ->reject(fn($id) => $id == $state)
-                                        ->filter()
-                                        ->contains($value);
-                                })
-                                ->afterStateUpdated(function ($state, callable $get, callable $set) {
-                                    $producto = Producto::find($state);
-                                    if ($producto) {
-                                        $set('precio_pdet', $producto->precio_pro);
-                                        $set('subtotal_pdet', $get('cantidad_pdet') * $producto->precio_pro);
-                                        //$set('subtotal_pdet', $producto->precio_pro * $get('cantidad_pdet'));
-                                        //$set('subtotal_pdet', $get('cantidad_pdet') * $get('precio_pdet'));
-                                    }
-                                    self::scheduleTotalUpdate($get, $set);
-                                }),
+                                    ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                                        $producto = Producto::find($state);
+                                        if ($producto) {
+                                            $set('precio_pdet', $producto->precio_pro);
+                                            $set('subtotal_pdet', $get('cantidad_pdet') * $producto->precio_pro);
+                                            //$set('subtotal_pdet', $producto->precio_pro * $get('cantidad_pdet'));
+                                            //$set('subtotal_pdet', $get('cantidad_pdet') * $get('precio_pdet'));
+                                        }
+                                        self::updateTotal($get, $set);
+                                    }),
                                 TextInput::make('cantidad_pdet')->label('Cantidad')->numeric()->required()->live(debounce: 500)
-                                ->afterStateUpdated(function ($state, callable $get, callable $set) {
-                                    $set('subtotal_pdet', $state * $get('precio_pdet'));
-                                    self::scheduleTotalUpdate($get, $set);
-                                }),
+                                    ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                                        $set('subtotal_pdet', $state * $get('precio_pdet'));
+                                        self::updateTotal($get, $set);
+                                    }),
                                 TextInput::make('precio_pdet')->label('Precio unitario')->numeric()->required()->prefix('$')->readOnly(),
-                                TextInput::make('subtotal_pdet')->label('Subtotal')->numeric()->required()->prefix('$')->readOnly()->live(debounce: 600),
+                                TextInput::make('subtotal_pdet')->label('Subtotal')->numeric()->required()->prefix('$')->readOnly()->live(debounce: 600)
+                                    ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                                        self::updateTotal($get, $set);
+                                    }),
                             ])
                             ->createItemButtonLabel('Añadir Producto')
                             ->columns(4)
@@ -187,11 +157,11 @@ class PedidoResource extends Resource
                             ->live()
 
                             ->afterStateUpdated(function (callable $get, callable $set) {
-                                self::scheduleTotalUpdate($get, $set);
+                                self::updateTotal($get, $set);
                             })
-                            
+
                             ->deleteAction(
-                                fn(Action $action) => $action->after(fn(callable $get, callable $set) => self::updateTotal($get, $set)),
+                                fn (Action $action) => $action->after(fn (callable $get, callable $set) => self::updateTotal($get, $set)),
                             ),
 
                     ])

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('descripcion_pro', 150);
             $table->decimal('precio_pro',6,2);
             $table->boolean('disponibilidad_pro')->default(true);
-            $table->string('imagenRef_pro', 260);
+            $table->string('imagenRef_pro', 60);
             
             $table->foreignId('id_categoria')
                     ->nullable()

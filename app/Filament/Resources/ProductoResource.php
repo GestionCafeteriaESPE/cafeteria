@@ -52,22 +52,22 @@ class ProductoResource extends Resource
                                 ->required(),
                             Select::make('id_categoria')->label('Categoria')->relationship('categoria', 'nombre_cat')->required(),
                             FileUpload::make('imagenRef_pro')->label('Imagen del Producto')->required()
-                                ->image()
-                                ->imageEditor()
-                                ->imageEditorAspectRatios([
-                                    null,
-                                    '16:9',
-                                    '4:3',
-                                    '1:1',
-                                ])
-                                ->uploadingMessage('Cargando imagen...')
-                                ->directory('\imagenes\Producto')
-                                ->maxSize(2048) // tamaño máximo del archivo en KB
-                                ->getUploadedFileNameForStorageUsing(
-                                    fn (TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
-                                        ->prepend('prod-'),
-                                ),
-
+                            ->disk('producto') // Especifica el disco (antes: public)
+                            ->image()
+                            ->imageEditor()
+                            ->imageEditorAspectRatios([
+                                null,
+                                '16:9',
+                                '4:3',
+                                '1:1',
+                            ])
+                            ->uploadingMessage('Cargando imagen...')
+                            ->directory('') // Deja vacío para usar el root del disco (antes 'imagenes/Producto')
+                            ->maxSize(2048) // tamaño máximo del archivo en KB
+                            ->getUploadedFileNameForStorageUsing(
+                                fn (TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
+                                    ->prepend('prod-'),
+                            ),
                         ]),
             ]);
     }
@@ -82,7 +82,8 @@ class ProductoResource extends Resource
                 TextColumn::make('disponibilidad_pro')->label('Disponibilidad')
                     ->formatStateUsing(fn (bool $state): string => $state ? 'Disponible' : 'No disponible')
                     ->sortable(),
-                ImageColumn::make('imagenRef_pro')->label('Imagen')->width(50)->height(50),
+                ImageColumn::make('imagenRef_pro')->label('Imagen')->disk('producto')->width(50)->height(50)->circular() //(antes: producto)
+                    ->url(fn($record) => asset('storage/imagenes/Producto/' . $record->imagenRef_pro)),
                 TextColumn::make('categoria.nombre_cat')->label('Categoria')->sortable(),
                 TextColumn::make('created_at')->label('Creado')
                     ->dateTime()
@@ -130,7 +131,8 @@ class ProductoResource extends Resource
                         TextEntry::make('precio_pro')->label('Precio unitario'),
                         TextEntry::make('disponibilidad_pro')->label('Disponibilidad'),
                         TextEntry::make('categoria.nombre_cat')->label('Categoría'),
-                        ImageEntry::make('imagenRef_pro')->label('Imagen del Producto')->width(150)->height(150),
+                        ImageEntry::make('imagenRef_pro')->label('Imagen del Producto')->width(150)->height(150)
+                            ->default(fn ($record) => asset('storage/imagenes/Producto/' . $record->imagenRef_pro)), // Genera la URL correcta
                     ])
                     ->columns(3),
             ]);

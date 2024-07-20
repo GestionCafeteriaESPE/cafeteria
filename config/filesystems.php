@@ -56,6 +56,13 @@ return [
             'throw' => false,
         ],
 
+        'producto' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/imagenes/Producto'),
+            'url' => env('APP_URL').'/public/storage/imagenes/Producto',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
     ],
 
     /*
