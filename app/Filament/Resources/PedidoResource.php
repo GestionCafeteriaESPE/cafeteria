@@ -16,20 +16,20 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
+
 use Closure;
-use Filament\Forms\Components\Repeater;
+use Filament\Infolists\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Forms\Components\Actions\Action;
-use App\Models\Post;
-use App\Models\User;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
-use Livewire\Component;
-use Livewire\Attributes\On;
 
 class PedidoResource extends Resource
 {
@@ -172,31 +172,21 @@ class PedidoResource extends Resource
             ]);
     }
 
-    public static function scheduleTotalUpdate(callable $get, callable $set): void {
-        // Usar un temporizador para retrasar la actualización del total
-        $attempt = 0;
-        // Condición de parada para evitar recursión infinita
-        if ($attempt < 2) { // Puedes ajustar el número de intentos según sea necesario
-            $attempt += 1;
-            self::updateTotal($get, $set);
-        }
-    }
-
     public static function updateTotal(callable $get, callable $set): void
     {
         $total = 0;
         $peDetalles = $get('peDetalles') ?? [];
 
-        foreach ($peDetalles as $detalle) {
+        foreach ($peDetalles as $index => $detalle) {
             // Verificar si los detalles tienen los campos necesarios
-            if (isset($detalle['precio_pdet']) && isset($detalle['subtotal_pdet'])) {
-
-                $total += $detalle['subtotal_pdet'];
+            if (isset($detalle['precio_pdet']) && isset($detalle['cantidad_pdet'])) {
+                $subtotal = $detalle['precio_pdet'] * $detalle['cantidad_pdet'];
+                $set("peDetalles.{$index}.subtotal_pdet", $subtotal); // Asegurar que el subtotal se actualiza
+                $total += $subtotal;
             } else {
                 Log::error('Detalle faltante', $detalle); // Log para depuración
             }
         }
-        //sleep(1);
         $set('total_ped', $total);
     }
 
@@ -219,13 +209,60 @@ class PedidoResource extends Resource
                 //
             ])
             ->actions([
-                //Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label('Editar')
+                    ->icon('heroicon-o-pencil')
+                    ->color('primary'),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Eliminar')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make('Datos de cliente')
+                    ->schema([
+                        TextEntry::make('cliente.cedula_cli')->label('Cédula'),
+                        TextEntry::make('cliente.nombre_cli')->label('Nombres y Apellidos'),
+                        TextEntry::make('cliente.telefono_cli')->label('Número de Teléfono'),
+                        TextEntry::make('cliente.email_cli')->label('Dirección E-mail'),
+                    ])
+                    ->columns(4),
+
+                Section::make('Datos de pedido')
+                    ->schema([
+                        TextEntry::make('fecha_ped')->label('Fecha de Pedido'),
+                        TextEntry::make('modoPago_ped')->label('Modo de Pago'),
+                        TextEntry::make('estado_ped')->label('Estado de Pedido'),
+                        TextEntry::make('total_ped')->label('Total')->prefix('$'),
+                    ])
+                    ->columns(4),
+                Section::make('Detalles del pedido')
+                    ->schema(function ($record) {
+                        $detalles = $record->peDetalles;
+
+                        return $detalles->map(function ($detalle, $index) {
+                            return Section::make('Producto ' . ($index + 1))
+                                ->schema([
+                                    TextEntry::make('producto.nombre_pro')->label('Producto')->default($detalle->producto->nombre_pro),
+                                    TextEntry::make('cantidad_pdet')->label('Cantidad')->default($detalle->cantidad_pdet),
+                                    TextEntry::make('precio_pdet')->label('Precio Unitario')->prefix('$')->default($detalle->precio_pdet),
+                                    TextEntry::make('subtotal_pdet')->label('Subtotal')->prefix('$')->default($detalle->subtotal_pdet),
+                                ])
+                                ->columns(4);
+                        })->toArray();
+                    })
+                    ->columns(4),
             ]);
     }
 

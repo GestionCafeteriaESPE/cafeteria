@@ -78,4 +78,9 @@ class PeDetalleResource extends Resource
             'edit' => Pages\EditPeDetalle::route('/{record}/edit'),
         ];
     }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
 }
