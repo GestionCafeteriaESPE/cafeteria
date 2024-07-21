@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
             $table->date('fecha_ped');
-            $table->decimal('total_ped',6,2);
+            $table->decimal('total_ped',8,2);
             $table->string('modoPago_ped', 20);
             $table->boolean('estado_ped')->default(false);
             
