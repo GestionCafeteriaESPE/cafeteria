@@ -9,65 +9,88 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
+<!-- HORARIO DE ATENCIÓN -->
+
 <body class="min-h-screen bg-white">
     <div class="bg-blue-200 text-center py-2 text-sm text-gray-700">Lunes a Sábado 2pm-8pm</div>
-    <header class="flex items-center justify-between px-4 py-4 border-b">
+
+    <!--BARRA DE MENÚ -->
+    <header id="home"class="flex flex-col md:flex-row items-center justify-between px-4 py-4 border-b">
         <div class="flex items-center space-x-4">
             <div class="text-4xl font-bold" style="color: #73616D;">ELÍAS</div>
             <div class="text-lg font-semibold" style="color: #B38184;">CAFETERÍA</div>
         </div>
-        <nav class="flex space-x-8">
-            <a href="#" class="text-gray-500 hover:text-gray-700">HOME</a>
-            <a href="#" class="text-gray-500 hover:text-gray-700">MENÚ</a>
-            <a href="#" class="text-gray-500 hover:text-gray-700">INFORMACIÓN</a>
+        <nav class="mt-4 md:mt-0 flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 w-full md:w-auto">
+            <a href="#home" class="text-gray-500 hover:text-gray-700 border-l border-gray-300 pl-4 first:pl-0 first:border-l-0">HOME</a>
+            <a href="#menu" class="text-gray-500 hover:text-gray-700 border-l border-gray-300 pl-4 first:pl-0 last:border-l-0">MENÚ</a>
+            <a href="#informacion" class="text-gray-500 hover:text-gray-700 border-l border-gray-300 pl-4 last:border-l-0">INFORMACIÓN</a>
         </nav>
-        <a href="{{ route('filament.admin.auth.login') }}" class="px-4 py-2 border border-gray-500 rounded-full text-gray-500 hover:text-gray-700 hover:border-gray-700 inline-block">
+        <a href="{{ route('filament.admin.auth.login') }}" class="mt-4 md:mt-0 px-4 py-2 border border-gray-500 rounded-full text-gray-500 inline-block w-full md:w-auto text-center" style="background-color: #F0B39E; color: #73616D; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
             Login
         </a>
+
     </header>
-    <main class="flex">
-        <div style="width: 50%; background-color: #413E49; display: flex; justify-content: center; align-items: center;">
-            <!--Referenciar imagenes dentro de la carpeta public/ imagenes -->
-            <img src="{{ asset('imagenes/logo.png') }}" class="h-90 w-100" />
+
+    <!-- BANNER -->
+    <main class="flex flex-col md:flex-row">
+        <!-- Sección con la imagen -->
+        <div class="w-full md:w-1/2 flex justify-center items-center" style="background-color: #413E49; padding: 2rem;">
+            <img src="{{ asset('imagenes/logo.png') }}" class="h-64 md:h-124 w-auto" />
         </div>
-        <div class="w-1/2" style="background-color: #F0B39E; display: flex; justify-content: center; align-items: center;">
+
+        <!-- Sección con el texto -->
+        <div class="w-full md:w-1/2 flex justify-center items-center" style="background-color: #F0B39E; padding: 2rem;">
             <div class="text-center">
-                <div class="font-bold" style="color: #73616D; font-size: 8rem;">ELÍAS</div>
-                <div class="font-bold" style="color: #B38184; font-size: 8rem;">CAFETERÍA</div>
+                <div class="font-bold text-4xl md:text-8xl" style="color: #73616D;">ELÍAS</div>
+                <div class="font-bold text-4xl md:text-8xl" style="color: #B38184;">CAFETERÍA</div>
             </div>
         </div>
     </main>
 
     <!-- SECCIÓN DE MENÚ -->
-    <section class="w-full py-12 md:py-24 lg:py-32 bg-gray-100 flex justify-center items-center">
+    <section id="menu" class="w-full py-12 md:py-24 lg:py-32 bg-gray-100 flex justify-center items-center">
         <div class="container mx-auto px-4 text-center">
-            <div class="text-center">
-                <div class="font-bold" style="color: #F0B39E; font-size: 2rem;">------------------------------------------EL MENÚ ------------------------------------------</div>
+            <div class="text-center mb-8">
+                <div class="font-bold text-2xl md:text-3xl" style="color: #F0B39E;">EL MENÚ</div>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 justify-center items-center">
+
+            <!-- Categorías -->
+            <div class="grid grid-cols-3 sm:grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Bebidas -->
                 <div class="flex flex-col items-center gap-4">
-                    <h1 class="font-semibold tracking-tight">Bebidas</h1>
-                    <img src="{{ asset('imagenes/bebidas.jpg') }}" alt="Bebidas" class="rounded-lg object-cover w-full h-auto sm:w-64 md:w-72 lg:w-80 xl:w-96" />
+                    <h1 class="font-semibold text-lg">Bebidas cold and hot</h1>
+                    <img src="{{ asset('imagenes/bebidas.jpg') }}" alt="Bebidas" class="rounded-lg object-cover w-full h-auto" />
                     <div class="flex flex-col items-center gap-2">
-                        <a href="#" style="background-color: #F7E3BE;" class="inline-flex h-8 items-center justify-center rounded-md text-white px-4 text-sm font-medium shadow transition-colors hover:bg-opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
+                        <a href="#bebidas" style="background-color: #F7E3BE;" class="inline-flex h-8 items-center justify-center rounded-md text-white px-4 text-sm font-medium shadow transition-colors hover:bg-opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
                             Ver más
                         </a>
                     </div>
                 </div>
+
+                <!-- CSS para desplazamiento suave -->
+                <style>
+                    html {
+                        scroll-behavior: smooth;
+                    }
+                </style>
+
+                <!-- Postres -->
                 <div class="flex flex-col items-center gap-4">
-                    <h3 class="font-semibold tracking-tight">Postres</h3>
-                    <img src="{{ asset('imagenes/postres.jpg') }}" alt="Postres" class="rounded-lg object-cover w-full h-auto sm:w-64 md:w-72 lg:w-80 xl:w-96" />
+                    <h3 class="font-semibold text-lg">Postres </h3>
+                    <img src="{{ asset('imagenes/postres.jpg') }}" alt="Postres" class="rounded-lg object-cover w-full h-auto" />
                     <div class="flex flex-col items-center gap-2">
-                        <a href="#" style="background-color: #F7E3BE;" class="inline-flex h-8 items-center justify-center rounded-md text-white px-4 text-sm font-medium shadow transition-colors hover:bg-opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
+                        <a href="#postres" style="background-color: #F7E3BE;" class="inline-flex h-8 items-center justify-center rounded-md text-white px-4 text-sm font-medium shadow transition-colors hover:bg-opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
                             Ver más
                         </a>
                     </div>
                 </div>
+
+                <!-- Bocatas y Sanduches -->
                 <div class="flex flex-col items-center gap-4">
-                    <h3 class="font-semibold tracking-tight">Bocatas y Sanduches</h3>
-                    <img src="{{ asset('imagenes/sanduches.jpg') }}" alt="Bocatas y Sanduches" class="rounded-lg object-cover w-full h-auto sm:w-64 md:w-72 lg:w-80 xl:w-96" />
+                    <h3 class="font-semibold text-lg">Bocatas y Sanduches</h3>
+                    <img src="{{ asset('imagenes/sanduches.jpg') }}" alt="Bocatas y Sanduches" class="rounded-lg object-cover w-full h-auto" />
                     <div class="flex flex-col items-center gap-2">
-                        <a href="#" style="background-color: #F7E3BE;" class="inline-flex h-8 items-center justify-center rounded-md text-white px-4 text-sm font-medium shadow transition-colors hover:bg-opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
+                        <a href="#bocatas-y-sandwiches" style="background-color: #F7E3BE;" class="inline-flex h-8 items-center justify-center rounded-md text-white px-4 text-sm font-medium shadow transition-colors hover:bg-opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
                             Ver más
                         </a>
                     </div>
@@ -75,16 +98,18 @@
             </div>
         </div>
     </section>
+
     <!-- SECCIÓN DE BEBIDAS -->
-    <div class="text-center">
-        <div class="font-bold" style="color: #F0B39E; font-size: 2rem;">BEBIDAS CALIENTES Y FRIAS------------------------------------------------------------------</div>
+    <div class="text-center py-12">
+        <div class="font-bold text-2xl" style="color: #F0B39E;">BEBIDAS CALIENTES Y FRIAS</div>
     </div>
-    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto py-12">
+    <section id="bebidas" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto py-12">
+        <!-- Items de bebidas -->
         <div class="bg-background rounded-lg shadow-lg overflow-hidden">
             <img src="{{ asset('imagenes/aromatica.png') }}" class="w-full h-64 object-cover" />
             <div class="p-4">
                 <h3 class="text-xl font-bold">AROMÁTICA</h3>
-                <p class="text-sm text-muted-foreground">Horchata,Hierva Luisa,Cedron </p>
+                <p class="text-sm text-muted-foreground">Horchata, Hierva Luisa, Cedron </p>
                 <p class="text-lg font-semibold">Precio: $1.00</p>
             </div>
         </div>
@@ -104,7 +129,6 @@
                 <p class="text-lg font-semibold">Precio: $2.75</p>
             </div>
         </div>
-
         <div class="bg-background rounded-lg shadow-lg overflow-hidden">
             <img src="{{ asset('imagenes/jugoFruta.png') }}" class="w-full h-64 object-cover" />
             <div class="p-4">
@@ -125,16 +149,17 @@
             <img src="{{ asset('imagenes/latteFrio.png') }}" class="w-full h-64 object-cover" />
             <div class="p-4">
                 <h3 class="text-xl font-bold">LATTE FRÍO</h3>
-                <p class="text-sm text-muted-foreground">Bebida a base de espresso, preparada con leche fría y leche vaporizada.</p>
+                <p class="text-sm text-muted-foreground">Bebida a base de espresso, preparada con leche.</p>
                 <p class="text-lg font-semibold">$2.75</p>
             </div>
         </div>
     </section>
+
     <!-- SECCIÓN DE POSTRES -->
     <div class="text-center">
-        <div class="font-bold" style="color: #F0B39E; font-size: 2rem;">POSTRES-----------------------------------------------------------------------------------------</div>
+        <div id="postres" class="font-bold" style="color: #F0B39E; font-size: 2rem;">POSTRES</div>
     </div>
-    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto py-12">
+    <section class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto py-12">
         <div class="bg-background rounded-lg shadow-lg overflow-hidden">
             <img src="{{ asset('imagenes/pastelChocolate.png') }}" class="w-full h-64 object-cover" />
             <div class="p-4">
@@ -186,11 +211,11 @@
         </div>
     </section>
 
-    <!-- SECCIÓN DE BOCATAS Y SANDUCHES -->
+    <!-- SECCIÓN DE BOCASTAS Y SANDUCHES -->
     <div class="text-center">
-        <div class="font-bold" style="color: #F0B39E; font-size: 2rem;">BOCATAS Y SANDUCHES----------------------------------------------------------------------</div>
+        <div id="bocatas-y-sandwiches" class="font-bold" style="color: #F0B39E; font-size: 2rem;">BOCATAS Y SANDUCHES</div>
     </div>
-    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto py-12">
+    <section class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto py-12">
         <div class="bg-background rounded-lg shadow-lg overflow-hidden">
             <img src="{{ asset('imagenes/bocataJamon.png') }}" class="w-full h-64 object-cover" />
             <div class="p-4">
@@ -228,7 +253,7 @@
             <img src="{{ asset('imagenes/sanducheQueso.png') }}" class="w-full h-64 object-cover" />
             <div class="p-4">
                 <h3 class="text-xl font-bold">SANDUCHE DE QUESO Y JAMÓN</h3>
-                <p class="text-sm text-muted-foreground">Sánduche de Queso Cheddar y jamón.​</p>
+                <p class="text-sm text-muted-foreground">Sánduche de Queso Cheddar y jamón.</p>
                 <p class="text-lg font-semibold">$3.00</p>
             </div>
         </div>
@@ -241,12 +266,13 @@
             </div>
         </div>
     </section>
+
     <!-- INFORMACIÓN -->
     <div class="text-center">
-        <div class="font-bold" style="color: #F0B39E; font-size: 2rem;">---------------------------------------INFORMACIÓN-----------------------------------</div>
+        <div class="font-bold" style="color: #F0B39E; font-size: 2rem;">INFORMACIÓN</div>
     </div>
 
-    <section class="py-12">
+    <section id="informacion"class="py-12">
         <div class="bg-gray-700 rounded-lg p-4 mx-auto" style="background-color: #73616D; width: 100%;">
             <textarea placeholder="¡Descubre una experiencia gastronómica excepcional en nuestra cafetería! Nuestro delicioso menú ofrece una amplia variedad de sabores irresistibles, desde exquisitos cafés hasta tentadoras opciones de bocadillos y platos principales. Con ingredientes frescos y de alta calidad, cada bocado es una verdadera delicia. ¡Ven y déjate sorprender por nuestros sabores únicos y nuestra hospitalidad excepcional!" class="w-full resize-none border-none bg-transparent text-white focus:outline-none h-40 text-2xl text-center"></textarea>
         </div>
@@ -257,30 +283,25 @@
                 <div class="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-50 rounded-full"></div>
             </div>
         </div>
-
-        <div class="text-center mt-8">
-            <div class="font-bold" style="color: #F0B39E; font-size: 2rem;">LA FASCINANTE GAMA DE VARIEDADES QUE TENEMOS PARA ELEGIR</div>
-        </div>
     </section>
 
     <!--INFO-->
-
     <section class="w-full py-8">
-        <div class="w-full grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="bg-[#F0B39E] p-4 text-center min-h-[200px]" style="background-color: #F0B39E !important;">
+        <div class="w-full flex flex-wrap md:grid md:grid-cols-4 gap-4">
+            <div class="bg-[#F0B39E] p-4 text-center min-w-[200px] flex-1" style="background-color: #F0B39E !important;">
                 <h2 class="text-pink-700 font-semibold mb-2">Salúdanos 👋</h2>
                 <p>Lunes a Sábado 2pm-8pm</p>
             </div>
-            <div class="bg-[#F7E3BE] p-4 text-center min-h-[200px]" style="background-color: #F7E3BE !important;">
+            <div class="bg-[#F7E3BE] p-4 text-center min-w-[200px] flex-1" style="background-color: #F7E3BE !important;">
                 <h2 class="text-pink-700 font-semibold mb-2">Ubicación</h2>
                 <p><span class="font-semibold">Local</span></p>
                 <p>Parque San Francisco. Quijano y Ordóñez & San Vicente Mártir</p>
             </div>
-            <div class="bg-[#F0B39E] p-4 text-center min-h-[200px]" style="background-color: #F0B39E !important;">
+            <div class="bg-[#F0B39E] p-4 text-center min-w-[200px] flex-1" style="background-color: #F0B39E !important;">
                 <h2 class="text-pink-700 font-semibold mb-2">Contacto</h2>
                 <p>0963606840</p>
             </div>
-            <div class="bg-[#F7E3BE] p-4 text-center min-h-[200px]" style="background-color: #F7E3BE !important;">
+            <div class="bg-[#F7E3BE] p-4 text-center min-w-[200px] flex-1" style="background-color: #F7E3BE !important;">
                 <h2 class="text-pink-700 font-semibold mb-2">Nuestras Redes Sociales</h2>
                 <p><span class="font-semibold">Instagram</span></p>
                 <p><a href="https://www.instagram.com/eliaspasteleria" class="text-black">eliaspasteleria</a></p>
@@ -290,9 +311,12 @@
         </div>
     </section>
 
-
-
-
+    <!--Derechos Reservados-->
+    <footer class="bg-gray-800 text-white py-4 text-center">
+        <div class="container mx-auto">
+            <p class="text-sm">&copy; 2024 ELÍAS CAFETERÍA. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 </body>
 
 </html>
