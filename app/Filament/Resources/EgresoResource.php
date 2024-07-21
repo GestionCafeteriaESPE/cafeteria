@@ -17,6 +17,12 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
 
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
+
+
 class EgresoResource extends Resource
 {
     protected static ?string $model = Egreso::class;
@@ -57,14 +63,35 @@ class EgresoResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make()->label('Ver'),
-                Tables\Actions\EditAction::make()->label('Editar'),
-                Tables\Actions\DeleteAction::make()->label('Eliminar'),
+                Tables\Actions\ViewAction::make()
+                    ->label('Ver'),
+                Tables\Actions\EditAction::make()
+                    ->label('Editar')
+                    ->icon('heroicon-o-pencil')
+                    ->color('primary'),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Eliminar')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                    Section::make('Datos de cliente')
+                        ->schema([
+                            TextEntry::make('fecha_Egr')->label('Fecha'),
+                            TextEntry::make('descripcion_Egr')->label('Descripción'),
+                            TextEntry::make('cantidad_Egr')->label('Cantidad'),
+                        ])
+                        ->columns(3),
             ]);
     }
 
