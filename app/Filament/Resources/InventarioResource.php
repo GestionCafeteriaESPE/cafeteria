@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\Grid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -22,6 +23,8 @@ class InventarioResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+        ->schema([
+            Grid::make(4)
             ->schema([
                 Forms\Components\TextInput::make('nombre_inv')
                     ->label('Nombre del Inventario')
@@ -38,7 +41,8 @@ class InventarioResource extends Resource
                     ->label('Estado')
                     ->required()
                     ->maxLength(60),
-            ]);
+            ]),
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -56,9 +60,9 @@ class InventarioResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make()->label('Ver'),
+                Tables\Actions\EditAction::make()->label('Editar'),
+                Tables\Actions\DeleteAction::make()->label('Eliminar'),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -71,7 +75,6 @@ class InventarioResource extends Resource
             'index' => Pages\ListInventarios::route('/'),
             'create' => Pages\CreateInventario::route('/create'),
             'edit' => Pages\EditInventario::route('/{record}/edit'),
-            'vista' => Pages\ViewInventario::route('/{record}'),
         ];
     }
 }

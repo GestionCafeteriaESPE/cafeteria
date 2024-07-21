@@ -12,7 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
@@ -32,12 +32,14 @@ class EgresoResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+        ->schema([
+            Grid::make(3)
             ->schema([
                 DatePicker::make('fecha_Egr')->label('Fecha de egreso')->required()->placeholder('YYYY-MM-DD'),
                 TextInput::make('descripcion_Egr')->label('Descripción de egreso')->maxLength(60)->required(),
                 TextInput::make('cantidad_Egr')->label('Cantidad de egreso')->numeric()->prefix('$')->required()
-                
-            ]);
+            ]),
+        ]);
     }
 
     public static function table(Table $table): Table
