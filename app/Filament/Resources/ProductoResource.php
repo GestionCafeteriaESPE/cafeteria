@@ -62,11 +62,11 @@ class ProductoResource extends Resource
                                 '1:1',
                             ])
                             ->uploadingMessage('Cargando imagen...')
-                            ->directory('') // Deja vacío para usar el root del disco (antes 'imagenes/Producto')
+                            ->directory('Producto') // Deja vacío para usar el root del disco (antes 'imagenes/Producto')
                             ->maxSize(2048) // tamaño máximo del archivo en KB
                             ->getUploadedFileNameForStorageUsing(
                                 fn (TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
-                                    ->prepend('prod-'),
+                                    ->prepend('prod-')
                             ),
                         ]),
             ]);

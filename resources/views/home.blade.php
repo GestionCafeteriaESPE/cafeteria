@@ -7,7 +7,7 @@
     <title>HOME</title>
     <!-- Tailwind CSS (para los estilos de la clase) -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
+</head> 
 
 <!-- HORARIO DE ATENCIÓN -->
 
@@ -105,54 +105,9 @@
     </div>
     <section id="bebidas" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto py-12">
         <!-- Items de bebidas -->
-        <div class="bg-background rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ asset('imagenes/aromatica.png') }}" class="w-full h-64 object-cover" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold">AROMÁTICA</h3>
-                <p class="text-sm text-muted-foreground">Horchata, Hierva Luisa, Cedron </p>
-                <p class="text-lg font-semibold">Precio: $1.00</p>
-            </div>
-        </div>
-        <div class="bg-background rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ asset('imagenes/espresso.png') }}" class="w-full h-64 object-cover" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold">ESPRESSO</h3>
-                <p class="text-sm text-muted-foreground">Bebida de café negro fuerte</p>
-                <p class="text-lg font-semibold">Precio: $2.75</p>
-            </div>
-        </div>
-        <div class="bg-background rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ asset('imagenes/macchiato.png') }}" class="w-full h-64 object-cover" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold">Macchiato</h3>
-                <p class="text-sm text-muted-foreground">Bebida caliente de 90% café y 10% leche.</p>
-                <p class="text-lg font-semibold">Precio: $2.75</p>
-            </div>
-        </div>
-        <div class="bg-background rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ asset('imagenes/jugoFruta.png') }}" class="w-full h-64 object-cover" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold">JUGO DE FRUTA</h3>
-                <p class="text-sm text-muted-foreground">Fresa, Melon, Piña</p>
-                <p class="text-lg font-semibold">$1.00</p>
-            </div>
-        </div>
-        <div class="bg-background rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ asset('imagenes/batidoFruta.png') }}" class="w-full h-64 object-cover" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold">BATIDO DE FRUTA</h3>
-                <p class="text-sm text-muted-foreground">Fresa, Mora, Taxo.</p>
-                <p class="text-lg font-semibold">$1.00</p>
-            </div>
-        </div>
-        <div class="bg-background rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ asset('imagenes/latteFrio.png') }}" class="w-full h-64 object-cover" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold">LATTE FRÍO</h3>
-                <p class="text-sm text-muted-foreground">Bebida a base de espresso, preparada con leche.</p>
-                <p class="text-lg font-semibold">$2.75</p>
-            </div>
-        </div>
+        @foreach($productos as $producto)
+                    <x-grid-productos :producto="$producto" /> <!-- LLamada al componente -->
+        @endforeach
     </section>
 
     <!-- SECCIÓN DE POSTRES -->
@@ -160,55 +115,7 @@
         <div id="postres" class="font-bold" style="color: #F0B39E; font-size: 2rem;">POSTRES</div>
     </div>
     <section class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto py-12">
-        <div class="bg-background rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ asset('imagenes/pastelChocolate.png') }}" class="w-full h-64 object-cover" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold">PASTEL DE CHOCOLATE</h3>
-                <p class="text-sm text-muted-foreground">Pastel de chocolate, acompañado de frutos rojos </p>
-                <p class="text-lg font-semibold">Precio: $3.50</p>
-            </div>
-        </div>
-        <div class="bg-background rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ asset('imagenes/cheesecakeMaracuya.png') }}" class="w-full h-64 object-cover" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold">CHEESECAKE DE MARACUYÁ</h3>
-                <p class="text-sm text-muted-foreground">Postre con base de galleta sabor a maracuyá.</p>
-                <p class="text-lg font-semibold">Precio: $3.75</p>
-            </div>
-        </div>
-        <div class="bg-background rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ asset('imagenes/pastelTresLeches.png') }}" class="w-full h-64 object-cover" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold">PASTEL DE TRES LECHES</h3>
-                <p class="text-sm text-muted-foreground">Postre de tres leches (evaporada, condensada y media crema).</p>
-                <p class="text-lg font-semibold">Precio: $2.75</p>
-            </div>
-        </div>
-
-        <div class="bg-background rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ asset('imagenes/waffleFrutaCrema.png') }}" class="w-full h-64 object-cover" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold">WAFFLE DE FRUTA CON CREMA</h3>
-                <p class="text-sm text-muted-foreground">Crepa acompañada de una fruta a elección y crema Fruta: Fresa, Banana</p>
-                <p class="text-lg font-semibold">$3.00</p>
-            </div>
-        </div>
-        <div class="bg-background rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ asset('imagenes/crepaChocolate.png') }}" class="w-full h-64 object-cover" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold">CREPA DE CHOCOLATE Y MERMELADA</h3>
-                <p class="text-sm text-muted-foreground">Crepa con chocolate y mermelada sabor a elección, Fresa,Piña, Mora</p>
-                <p class="text-lg font-semibold">$3.00</p>
-            </div>
-        </div>
-        <div class="bg-background rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ asset('imagenes/helado.png') }}" class="w-full h-64 object-cover" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold">HELADOS</h3>
-                <p class="text-sm text-muted-foreground">Helado casero de diferentes sabores. Vainilla, Chocolate</p>
-                <p class="text-lg font-semibold">$1.75</p>
-            </div>
-        </div>
+        
     </section>
 
     <!-- SECCIÓN DE BOCASTAS Y SANDUCHES -->
@@ -216,55 +123,7 @@
         <div id="bocatas-y-sandwiches" class="font-bold" style="color: #F0B39E; font-size: 2rem;">BOCATAS Y SANDUCHES</div>
     </div>
     <section class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto py-12">
-        <div class="bg-background rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ asset('imagenes/bocataJamon.png') }}" class="w-full h-64 object-cover" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold">BOCATA DE JAMÓN DE PAVO</h3>
-                <p class="text-sm text-muted-foreground">Bocata de jamón de pavo, con pan casero y tomate. </p>
-                <p class="text-lg font-semibold">Precio: $3.50</p>
-            </div>
-        </div>
-        <div class="bg-background rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ asset('imagenes/bocataPernil.png') }}" class="w-full h-64 object-cover" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold">BOCATA DE PERNIL</h3>
-                <p class="text-sm text-muted-foreground">Bocata de pernil asado, con pan casero y lechuga.</p>
-                <p class="text-lg font-semibold">Precio: $4.00</p>
-            </div>
-        </div>
-        <div class="bg-background rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ asset('imagenes/bocataRoast.png') }}" class="w-full h-64 object-cover" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold">BOCATA ROAST BEEF</h3>
-                <p class="text-sm text-muted-foreground">Bocata de carne asada, con pan casero y lechuga.</p>
-                <p class="text-lg font-semibold">Precio: $3.75</p>
-            </div>
-        </div>
-
-        <div class="bg-background rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ asset('imagenes/sanducheVerduras.png') }}" class="w-full h-64 object-cover" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold">SANDUCHE DE VERDURAS</h3>
-                <p class="text-sm text-muted-foreground">Sánduche de tomate, lechuga y cebolla</p>
-                <p class="text-lg font-semibold">$2.75</p>
-            </div>
-        </div>
-        <div class="bg-background rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ asset('imagenes/sanducheQueso.png') }}" class="w-full h-64 object-cover" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold">SANDUCHE DE QUESO Y JAMÓN</h3>
-                <p class="text-sm text-muted-foreground">Sánduche de Queso Cheddar y jamón.</p>
-                <p class="text-lg font-semibold">$3.00</p>
-            </div>
-        </div>
-        <div class="bg-background rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ asset('imagenes/sanducheIntegral.png') }}" class="w-full h-64 object-cover" />
-            <div class="p-4">
-                <h3 class="text-xl font-bold">SANDUCHE INTEGRAL DE JAMÓN DE PAVO</h3>
-                <p class="text-sm text-muted-foreground">Sánduche de jamón de pavo, con pan integral.</p>
-                <p class="text-lg font-semibold">$3.75</p>
-            </div>
-        </div>
+        
     </section>
 
     <!-- INFORMACIÓN -->
