@@ -21,7 +21,7 @@ class EgresosStat extends BaseWidget
         return[
             Stat::make('Total de Egresos', "$" . number_format($totalEgresos, 2)),
             Stat::make('Total de Ingresos', "$" . number_format($totalIngresos, 2)),
-            Stat::make('Total de Subtotales de Pedidos', "$" . number_format($totalPedidos, 2)),
+            Stat::make('Total de Pedidos', "$" . number_format($totalPedidos, 2)),
         ];
 
     }

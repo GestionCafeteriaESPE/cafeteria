@@ -17,6 +17,8 @@ class Dashboard extends Page
             EgresostWidget::class,
             IngresotWidget::class,
             PedidoWidget::class,
+            ProductoMVWidget::class,
+            ProductoWidget::class,
         ];
     }
 }

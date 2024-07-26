@@ -15,6 +15,11 @@ use Filament\Forms\Components\Grid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
+
 class InventarioResource extends Resource
 {
     protected static ?string $model = Inventario::class;
@@ -23,8 +28,6 @@ class InventarioResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-        ->schema([
-            Grid::make(4)
             ->schema([
                 Forms\Components\TextInput::make('nombre_inv')
                     ->label('Nombre del Inventario')
@@ -41,8 +44,7 @@ class InventarioResource extends Resource
                     ->label('Estado')
                     ->required()
                     ->maxLength(60),
-            ]),
-        ]);
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -53,8 +55,6 @@ class InventarioResource extends Resource
                 TextColumn::make('descripcion_inv')->label('Descripción'),
                 TextColumn::make('cantidad_inv')->label('Cantidad'),
                 TextColumn::make('estado_inv')->label('Estado'),
-                TextColumn::make('created_at')->label('Creado')->dateTime(),
-                TextColumn::make('updated_at')->label('Actualizado')->dateTime(),
             ])
             ->filters([
                 //
@@ -66,6 +66,20 @@ class InventarioResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
+            ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                    Section::make('Datos del Inventario')
+                        ->schema([
+                            TextEntry::make('nombre_inv')->label('Nombre'),
+                            TextEntry::make('descripcion_inv')->label('Descripción'),
+                            TextEntry::make('cantidad_inv')->label('Cantidad'),
+                            TextEntry::make('estado_inv')->label('Estado'),
+                        ])->columns(4),
             ]);
     }
 
