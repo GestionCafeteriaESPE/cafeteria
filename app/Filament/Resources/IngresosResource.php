@@ -61,7 +61,16 @@ class IngresosResource extends Resource
                 // Agrega tus filtros aquí
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->label('Ver'),
+                Tables\Actions\EditAction::make()
+                    ->label('Editar')
+                    ->icon('heroicon-o-pencil')
+                    ->color('primary'),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Eliminar')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger'),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
