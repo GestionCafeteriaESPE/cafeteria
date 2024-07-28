@@ -25,7 +25,7 @@ class CategoriaResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('nombre_cat')->required()->maxLength(100)
+                TextInput::make('nombre_cat')->label('Nombre de Categoría')->required()->maxLength(60),
             ]);
     }
 
@@ -33,19 +33,28 @@ class CategoriaResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('nombre_cat')->searchable(),
-                TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault:true),
-                TextColumn::make('update_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault:true)
+                TextColumn::make('nombre_cat')->label('Nombre de Categoría')->searchable(),
+                TextColumn::make('created_at')->label('Creado')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault:true),
+                TextColumn::make('update_at')->label('Actualizado')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault:true)
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label('Editar')
+                    ->icon('heroicon-o-pencil')
+                    ->color('primary'),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Eliminar')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                    ->label('Eliminar seleccionados')
+                    ->color('danger'),
                 ]),
             ]);
     }
