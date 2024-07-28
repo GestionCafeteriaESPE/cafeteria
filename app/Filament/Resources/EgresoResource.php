@@ -85,7 +85,7 @@ class EgresoResource extends Resource
     {
         return $infolist
             ->schema([
-                    Section::make('Datos de cliente')
+                    Section::make('Datos del Egreso')
                         ->schema([
                             TextEntry::make('fecha_Egr')->label('Fecha'),
                             TextEntry::make('descripcion_Egr')->label('Descripción'),
