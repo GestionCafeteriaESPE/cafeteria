@@ -12,6 +12,12 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\Grid;
+
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
 
 class IngresosResource extends Resource
 {
@@ -22,6 +28,8 @@ class IngresosResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+        ->schema([
+        Grid::make(3)
             ->schema([
                 DatePicker::make('fecha_ing')
                     ->label('Fecha de Ingreso')
@@ -37,7 +45,8 @@ class IngresosResource extends Resource
                     ->label('Cantidad')
                     ->required()
                     ->numeric(),
-            ]);
+            ]),
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -62,7 +71,9 @@ class IngresosResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()
-                    ->label('Ver'),
+                    ->label('Ver')
+                    ->icon('heroicon-o-eye')
+                    ->color('secondary'),
                 Tables\Actions\EditAction::make()
                     ->label('Editar')
                     ->icon('heroicon-o-pencil')
@@ -74,6 +85,20 @@ class IngresosResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
+            ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                    Section::make('Datos del Ingreso')
+                        ->schema([
+                            TextEntry::make('fecha_ing')->label('Fecha'),
+                            TextEntry::make('descripcion_ing')->label('Descripción'),
+                            TextEntry::make('cantidad_ing')->label('Cantidad'),
+                        ])
+                        ->columns(3),
             ]);
     }
 

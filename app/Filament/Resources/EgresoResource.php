@@ -64,7 +64,9 @@ class EgresoResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()
-                    ->label('Ver'),
+                    ->label('Ver')
+                    ->icon('heroicon-o-eye')
+                    ->color('secondary'),
                 Tables\Actions\EditAction::make()
                     ->label('Editar')
                     ->icon('heroicon-o-pencil')
@@ -85,7 +87,7 @@ class EgresoResource extends Resource
     {
         return $infolist
             ->schema([
-                    Section::make('Datos de cliente')
+                    Section::make('Datos del Egreso')
                         ->schema([
                             TextEntry::make('fecha_Egr')->label('Fecha'),
                             TextEntry::make('descripcion_Egr')->label('Descripción'),
