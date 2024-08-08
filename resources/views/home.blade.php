@@ -7,7 +7,7 @@
     <title>HOME</title>
     <!-- Tailwind CSS (para los estilos de la clase) -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head> 
+</head>
 
 <!-- HORARIO DE ATENCIÓN -->
 
@@ -15,7 +15,7 @@
     <div class="bg-blue-200 text-center py-2 text-sm text-gray-700">Lunes a Sábado 2pm-8pm</div>
 
     <!--BARRA DE MENÚ -->
-    <header id="home"class="flex flex-col md:flex-row items-center justify-between px-4 py-4 border-b">
+    <header id="home" class="flex flex-col md:flex-row items-center justify-between px-4 py-4 border-b">
         <div class="flex items-center space-x-4">
             <div class="text-4xl font-bold" style="color: #73616D;">ELÍAS</div>
             <div class="text-lg font-semibold" style="color: #B38184;">CAFETERÍA</div>
@@ -99,39 +99,30 @@
         </div>
     </section>
 
-    <!-- SECCIÓN DE BEBIDAS -->
+    <!-- SECCIÓN DE PRODUCTOS -->
+
+    @foreach($categorias as $categoria)
     <div class="text-center py-12">
-        <div class="font-bold text-2xl" style="color: #F0B39E;">BEBIDAS CALIENTES Y FRIAS</div>
+        <div id="{{ strtolower($categoria->nombre_cat) }}" class="font-bold" style="color: #F0B39E; font-size: 2rem;">
+            {{ strtoupper($categoria->nombre_cat) }}
+        </div>
     </div>
-    <section id="bebidas" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto py-12">
-        <!-- Items de bebidas -->
-        @foreach($productos as $producto)
-                    <x-grid-productos :producto="$producto" /> <!-- LLamada al componente -->
+    <section id="{{ strtolower($categoria->nombre) }}" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto py-12">
+        <!-- Iterar sobre los productos de la categoría -->
+        @foreach($categoria->productos as $producto)
+        <x-grid-productos :producto="$producto" /> <!-- LLamada al componente -->
         @endforeach
     </section>
-
-    <!-- SECCIÓN DE POSTRES -->
-    <div class="text-center">
-        <div id="postres" class="font-bold" style="color: #F0B39E; font-size: 2rem;">POSTRES</div>
-    </div>
-    <section class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto py-12">
-        
+    @endforeach
     </section>
 
-    <!-- SECCIÓN DE BOCASTAS Y SANDUCHES -->
-    <div class="text-center">
-        <div id="bocatas-y-sandwiches" class="font-bold" style="color: #F0B39E; font-size: 2rem;">BOCATAS Y SANDUCHES</div>
-    </div>
-    <section class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto py-12">
-        
-    </section>
 
     <!-- INFORMACIÓN -->
     <div class="text-center">
         <div class="font-bold" style="color: #F0B39E; font-size: 2rem;">INFORMACIÓN</div>
     </div>
 
-    <section id="informacion"class="py-12">
+    <section id="informacion" class="py-12">
         <div class="bg-gray-700 rounded-lg p-4 mx-auto" style="background-color: #73616D; width: 100%;">
             <textarea placeholder="¡Descubre una experiencia gastronómica excepcional en nuestra cafetería! Nuestro delicioso menú ofrece una amplia variedad de sabores irresistibles, desde exquisitos cafés hasta tentadoras opciones de bocadillos y platos principales. Con ingredientes frescos y de alta calidad, cada bocado es una verdadera delicia. ¡Ven y déjate sorprender por nuestros sabores únicos y nuestra hospitalidad excepcional!" class="w-full resize-none border-none bg-transparent text-white focus:outline-none h-40 text-2xl text-center"></textarea>
         </div>

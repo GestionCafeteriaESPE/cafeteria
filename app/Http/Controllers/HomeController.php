@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
-use App\Models\Producto;
+//use App\Models\Producto;  COMENTAR
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -13,9 +13,9 @@ class HomeController extends Controller
      */
     public function __invoke(Request $request)
     {
-        return view ('home', [
-            'categorias'=>Categoria::all(),
-            'productos'=>Producto::all()
+        $categorias = Categoria::with('productos')->get(); // Cargar categorías con sus productos
+        return view('home', [
+            'categorias' => $categorias
         ]);
     }
 }
