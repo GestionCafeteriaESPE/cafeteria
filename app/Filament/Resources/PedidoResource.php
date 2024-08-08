@@ -7,6 +7,7 @@ use App\Filament\Resources\PedidoResource\RelationManagers;
 use App\Models\Cliente;
 use App\Models\Pedido;
 use App\Models\Producto;
+use App\Models\Categoria;
 use App\Models\PeDetalle;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -101,7 +102,7 @@ class PedidoResource extends Resource
                             ->afterStateUpdated(function (callable $get, callable $set) {
                                 self::updateTotal($get, $set);
                             }),
-                        TextInput::make('total_ped')->label('Total')->numeric()->prefix('$')->required()->live(debounce: 500)
+                        TextInput::make('total_ped')->label('Total')->numeric()->prefix('$')->required()->readOnly()->live(debounce: 500)
                             ->afterStateUpdated(function (callable $get, callable $set) {
                                 self::updateTotal($get, $set);
                             }),
@@ -112,18 +113,38 @@ class PedidoResource extends Resource
                 Forms\Components\Section::make('Productos de Pedido')
                     ->description('Ingrese los productos dentro de este pedido')
                     ->schema([
-
                         Forms\Components\Repeater::make('peDetalles')
                             ->label('')
                             ->relationship()
                             ->schema([
+                                //Select::make('id_categoria')->label('Categoria')->required()->live(debounce: 400)->relationship('categoria', 'nombre_cat'),
+                                // Campo para seleccionar la categoría
+                                Select::make('id_categoria')->label('Categoría')->required()->reactive()
+                                    ->options(Categoria::all()->pluck('nombre_cat', 'id'))
+                                    //->afterStateUpdated(fn (callable $set) => $set('productos', [])),
+                                    ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                                        // Limpiar los campos de producto, cantidad, precio unitario y subtotal
+                                        $set('id_pro', null);
+                                        $set('cantidad_pdet', 0);
+                                        $set('precio_pdet', 0);
+                                        $set('subtotal_pdet', 0);
+                                
+                                        // Borrar toda la lista de productos en caso de que haya más de uno
+                                        $set('productos', []);
+                                        
+                                        // Actualizar el total del pedido
+                                        self::updateTotal($get, $set);
+                                    }),
+
                                 Select::make('id_pro')->label('Producto')->required()->live(debounce: 400)
-                                    ->relationship('producto', 'nombre_pro')
-                                    ->options(
-                                        $productos->mapWithKeys(function (Producto $producto) {
-                                            return [$producto->id => sprintf('%s ($%s)', $producto->nombre_pro, $producto->precio_pro)];
-                                        })
-                                    )
+                                    //->relationship('producto', 'nombre_pro')
+                                    ->options(function (callable $get) {
+                                        $categoriaId = $get('id_categoria');
+                                        if ($categoriaId) {
+                                            return Producto::where('id_categoria', $categoriaId)->pluck('nombre_pro', 'id');
+                                        }
+                                        return [];
+                                    })
                                     ->disableOptionWhen(function ($value, $state, callable $get) {
                                         return collect($get('../*.id_pro'))
                                             ->reject(fn ($id) => $id == $state)
@@ -140,19 +161,19 @@ class PedidoResource extends Resource
                                         }
                                         self::updateTotal($get, $set);
                                     }),
-                                TextInput::make('cantidad_pdet')->label('Cantidad')->numeric()->required()->live(debounce: 500)
+                                TextInput::make('cantidad_pdet')->label('Cantidad')->numeric()->required()->live(debounce: 500)->default(0)
                                     ->afterStateUpdated(function ($state, callable $get, callable $set) {
                                         $set('subtotal_pdet', $state * $get('precio_pdet'));
                                         self::updateTotal($get, $set);
                                     }),
-                                TextInput::make('precio_pdet')->label('Precio unitario')->numeric()->required()->prefix('$')->readOnly(),
-                                TextInput::make('subtotal_pdet')->label('Subtotal')->numeric()->required()->prefix('$')->readOnly()->live(debounce: 600)
+                                TextInput::make('precio_pdet')->label('Precio unitario')->numeric()->required()->prefix('$')->readOnly()->default(0),
+                                TextInput::make('subtotal_pdet')->label('Subtotal')->numeric()->required()->prefix('$')->readOnly()->live(debounce: 600)->default(0)
                                     ->afterStateUpdated(function ($state, callable $get, callable $set) {
                                         self::updateTotal($get, $set);
                                     }),
                             ])
                             ->createItemButtonLabel('Añadir Producto')
-                            ->columns(4)
+                            ->columns(5)
                             ->columnSpan('full')
                             ->live()
 
