@@ -13,8 +13,14 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
+
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
+
+use Filament\Notifications\Notification;
 
 class ClienteResource extends Resource
 {
@@ -26,10 +32,29 @@ class ClienteResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('nombre_cli')->label('Nombre del Cliente')->required()->maxLength(70),
-                TextInput::make('cedula_cli')->label('Cédula del Cliente')->required()->maxLength(10),
-                TextInput::make('email_cli')->label('E-mail del Cliente')->email()->maxLength(60),
-                TextInput::make('telefono_cli')->label('Teléfono del Cliente')->required()->maxLength(10),
+                Forms\Components\Section::make('Datos de cliente')
+                    ->description('Ingrese los datos del nuevo cliente')
+                    ->schema([
+                        TextInput::make('nombre_cli')->label('Nombre del Cliente')->required()->maxLength(70),
+                        TextInput::make('cedula_cli')->label('Cédula del Cliente')->required()->maxLength(10)->live(onBlur: true)
+                            ->afterStateUpdated(function ($state, callable $set) {
+                                // Verificar si la cédula ya existe en la base de datos
+                                if (Cliente::where('cedula_cli', $state)->exists()) {
+                                    // Limpiar el campo de cédula
+                                    $set('cedula_cli', '');
+
+                                    // Mostrar notificación de advertencia
+                                    Notification::make()
+                                        ->title('Cédula Existente')
+                                        ->body('Esta cédula ya pertenece a otro cliente registrado en el sistema. Por favor, ingrese otra.')
+                                        ->danger()
+                                        ->send();
+                                }
+                            }),
+                        TextInput::make('email_cli')->label('E-mail del Cliente')->email()->maxLength(60),
+                        TextInput::make('telefono_cli')->label('Teléfono del Cliente')->required()->maxLength(10),
+                        ])
+                    ->columns(2),
             ]);
     }
 
@@ -37,18 +62,29 @@ class ClienteResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('nombre_cli')->label('Nombre del Cliente')->searchable(),
-                TextColumn::make('cedula_cli')->label('Cédula del Cliente')->searchable(),
-                TextColumn::make('email_cli')->label('E-mail del Cliente')->searchable(),
-                TextColumn::make('telefono_cli')->label('Teléfono del Cliente')->searchable(),
-                TextColumn::make('created_at')->label('Creación del Cliente')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')->label('Actualización del Cliente')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true)
+                TextColumn::make('nombre_cli')->label('Nombre')->searchable(),
+                TextColumn::make('cedula_cli')->label('Cédula')->searchable(),
+                TextColumn::make('email_cli')->label('E-mail'),
+                TextColumn::make('telefono_cli')->label('Teléfono'),
+                TextColumn::make('created_at')->label('Creado')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')->label('Actualizado')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true)
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->label('Ver')
+                    ->icon('heroicon-o-eye')
+                    ->color('secondary'),
+                Tables\Actions\EditAction::make()
+                    ->label('Editar')
+                    ->icon('heroicon-o-pencil')
+                    ->color('primary'),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Eliminar')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -56,6 +92,22 @@ class ClienteResource extends Resource
                 ]),
             ]);
     }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make('Datos de cliente')
+                    ->schema([
+                        TextEntry::make('cedula_cli')->label('Cédula'),
+                        TextEntry::make('nombre_cli')->label('Nombres y Apellidos'),
+                        TextEntry::make('telefono_cli')->label('Número de Teléfono'),
+                        TextEntry::make('email_cli')->label('Dirección E-mail'),
+                    ])
+                    ->columns(2),
+            ]);
+    }
+
 
     public static function getRelations(): array
     {

@@ -161,7 +161,7 @@ class PedidoResource extends Resource
                                         }
                                         self::updateTotal($get, $set);
                                     }),
-                                TextInput::make('cantidad_pdet')->label('Cantidad')->numeric()->required()->live(debounce: 500)->default(0)
+                                TextInput::make('cantidad_pdet')->label('Cantidad')->numeric()->required()->live(onBlur: true)->default(0)
                                     ->afterStateUpdated(function ($state, callable $get, callable $set) {
                                         $set('subtotal_pdet', $state * $get('precio_pdet'));
                                         self::updateTotal($get, $set);
@@ -230,7 +230,10 @@ class PedidoResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->label('Ver')
+                    ->icon('heroicon-o-eye')
+                    ->color('secondary'),
                 Tables\Actions\EditAction::make()
                     ->label('Editar')
                     ->icon('heroicon-o-pencil')
