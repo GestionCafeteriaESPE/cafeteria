@@ -10,6 +10,8 @@ class Cliente extends Model
 {
     use HasFactory;
 
+    protected $table = 'clientes';
+
     protected $fillable = ['nombre_cli', 'cedula_cli', 'email_cli', 'telefono_cli'];
 
     public function pedidos(): HasMany
