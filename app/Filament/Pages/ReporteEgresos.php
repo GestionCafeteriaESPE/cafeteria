@@ -11,6 +11,7 @@ class ReporteEgresos extends Page
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack'; // Icono del menú
     protected static ?string $navigationLabel = 'Reporte de Egresos'; // Etiqueta del menú
     protected static ?string $navigationGroup = 'Reportes'; // Grupo en el menú
+    protected static ?int $sort = 11;
 
     public $egresos;
 

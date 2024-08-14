@@ -11,7 +11,8 @@ class ReportePedidos extends Page
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack'; // Icono del menú
     protected static ?string $navigationLabel = 'Reporte de Pedidos'; // Etiqueta del menú
     protected static ?string $navigationGroup = 'Reportes'; // Grupo en el menú
-
+    protected static ?int $sort = 12;
+    
     public $pedidos;
 
     public function mount()
