@@ -3,11 +3,14 @@
 namespace App\Filament\Resources\WidgetResource\Widgets;
 
 use App\Models\Ingresos;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 
 class IngresoWidget extends ChartWidget
 {
+    use HasWidgetShield;
+
     protected static ?string $heading = 'Ingresos';
 
     protected function getData(): array
@@ -19,8 +22,8 @@ class IngresoWidget extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Ingresos', 
-                    'data' => $ingresos->pluck('total')->toArray(),     
+                    'label' => 'Ingresos',
+                    'data' => $ingresos->pluck('total')->toArray(),
                 ],
             ],
             'labels' => $ingresos->pluck('date')->map(fn($date) => date('Y/m/d', strtotime($date)))->toArray(),

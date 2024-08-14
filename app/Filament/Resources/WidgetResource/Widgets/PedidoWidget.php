@@ -3,11 +3,14 @@
 namespace App\Filament\Resources\WidgetResource\Widgets;
 
 use App\Models\PeDetalle;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 
 class PedidoWidget extends ChartWidget
 {
+    use HasWidgetShield;
+
     protected static ?string $heading = 'Pedidos por Día';
 
     protected function getData(): array
@@ -17,7 +20,7 @@ class PedidoWidget extends ChartWidget
             ->groupBy('day')
             ->orderBy(DB::raw('FIELD(day, "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")'), 'asc')
             ->get();
-            
+
         $daysInSpanish = $totalPedido->pluck('day')->map(function ($day) {
             $days = [
                 'Sunday' => 'Domingo',
@@ -47,4 +50,3 @@ class PedidoWidget extends ChartWidget
         return 'bar';
     }
 }
-

@@ -3,11 +3,14 @@
 namespace App\Filament\Resources\WidgetResource\Widgets;
 
 use App\Models\PeDetalle;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 
 class ProductoMVWidget extends ChartWidget
 {
+    use HasWidgetShield;
+
     protected static ?string $heading = 'Productos Más Vendidos';
 
     protected function getData(): array

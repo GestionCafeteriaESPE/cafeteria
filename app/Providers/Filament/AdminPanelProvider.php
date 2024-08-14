@@ -7,6 +7,7 @@ use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use App\Filament\Resources\WidgetResource\Widgets\EgresostWidget;
 use App\Filament\Resources\WidgetResource\Widgets\EgresosStat;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -60,6 +61,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->plugins([
+                FilamentShieldPlugin::make()
             ]);
     }
 }
