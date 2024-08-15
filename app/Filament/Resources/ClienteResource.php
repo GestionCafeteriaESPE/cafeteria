@@ -51,7 +51,21 @@ class ClienteResource extends Resource
                                         ->send();
                                 }
                             }),
-                        TextInput::make('email_cli')->label('E-mail del Cliente')->email()->maxLength(60),
+                        TextInput::make('email_cli')->label('E-mail del Cliente')->email()->maxLength(60)->live(onBlur: true)
+                            ->afterStateUpdated(function ($state, callable $set) {
+                                // Verificar si el e-mail ya existe en la base de datos
+                                if (Cliente::where('email_cli', $state)->exists()) {
+                                    // Limpiar el campo de e-mail
+                                    $set('email_cli', '');
+
+                                    // Mostrar notificación de advertencia
+                                    Notification::make()
+                                        ->title('Dirección de Correo Existente')
+                                        ->body('Este correo ya pertenece a otro cliente registrado en el sistema. Por favor, ingrese otro.')
+                                        ->danger()
+                                        ->send();
+                                }
+                            }),
                         TextInput::make('telefono_cli')->label('Teléfono del Cliente')->required()->maxLength(10),
                         ])
                     ->columns(2),
@@ -104,7 +118,7 @@ class ClienteResource extends Resource
                         TextEntry::make('telefono_cli')->label('Número de Teléfono'),
                         TextEntry::make('email_cli')->label('Dirección E-mail'),
                     ])
-                    ->columns(2),
+                    ->columns(4),
             ]);
     }
 
