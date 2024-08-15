@@ -31,9 +31,12 @@
 
     </header>
 
+
+
     <!-- BANNER -->
     <main class="flex flex-col md:flex-row">
         <!-- Sección con la imagen -->
+
         <div class="w-full md:w-1/2 flex justify-center items-center" style="background-color: #413E49; padding: 2rem;">
             <img src="{{ asset('imagenes/logo.png') }}" class="h-64 md:h-124 w-auto" />
         </div>
@@ -48,73 +51,65 @@
     </main>
 
     <!-- SECCIÓN DE MENÚ -->
-    <section id="menu" class="w-full py-12 md:py-24 lg:py-32 bg-gray-100 flex justify-center items-center">
+    <section id="menu" class="w-full py-12 md:py-24 lg:py-32 bg-gray-100 flex flex-col items-center">
         <div class="container mx-auto px-4 text-center">
             <div class="text-center mb-8">
                 <div class="font-bold text-2xl md:text-3xl" style="color: #F0B39E;">EL MENÚ</div>
             </div>
 
             <!-- Categorías -->
-            <div class="grid grid-cols-3 sm:grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-3 sm:grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <!-- Bebidas -->
                 <div class="flex flex-col items-center gap-4">
-                    <h1 class="font-semibold text-lg">Bebidas cold and hot</h1>
                     <img src="{{ asset('imagenes/bebidas.jpg') }}" alt="Bebidas" class="rounded-lg object-cover w-full h-auto" />
-                    <div class="flex flex-col items-center gap-2">
-                        <a href="#bebidas" style="background-color: #F7E3BE;" class="inline-flex h-8 items-center justify-center rounded-md text-white px-4 text-sm font-medium shadow transition-colors hover:bg-opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
-                            Ver más
-                        </a>
-                    </div>
                 </div>
-
-                <!-- CSS para desplazamiento suave -->
-                <style>
-                    html {
-                        scroll-behavior: smooth;
-                    }
-                </style>
 
                 <!-- Postres -->
                 <div class="flex flex-col items-center gap-4">
-                    <h3 class="font-semibold text-lg">Postres </h3>
                     <img src="{{ asset('imagenes/postres.jpg') }}" alt="Postres" class="rounded-lg object-cover w-full h-auto" />
-                    <div class="flex flex-col items-center gap-2">
-                        <a href="#postres" style="background-color: #F7E3BE;" class="inline-flex h-8 items-center justify-center rounded-md text-white px-4 text-sm font-medium shadow transition-colors hover:bg-opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
-                            Ver más
-                        </a>
-                    </div>
                 </div>
 
                 <!-- Bocatas y Sanduches -->
                 <div class="flex flex-col items-center gap-4">
-                    <h3 class="font-semibold text-lg">Bocatas y Sanduches</h3>
                     <img src="{{ asset('imagenes/sanduches.jpg') }}" alt="Bocatas y Sanduches" class="rounded-lg object-cover w-full h-auto" />
-                    <div class="flex flex-col items-center gap-2">
-                        <a href="#bocatas-y-sandwiches" style="background-color: #F7E3BE;" class="inline-flex h-8 items-center justify-center rounded-md text-white px-4 text-sm font-medium shadow transition-colors hover:bg-opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
-                            Ver más
-                        </a>
-                    </div>
                 </div>
+            </div>
+
+            <!-- Botones de Categoría -->
+            <div class="flex flex-wrap justify-center gap-4">
+                @foreach($categorias as $categoria)
+                <div class="flex-shrink-0">
+                    <a href="#{{ strtolower($categoria->nombre_cat) }}" class="bg-[#F0B39E] text-black font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-[#e0a27f] active:bg-[#d49b6e] focus:outline-none focus:ring-2 focus:ring-[#d49b6e] transition-colors duration-300">
+                        {{ strtoupper($categoria->nombre_cat) }}
+                    </a>
+                </div>
+                @endforeach
             </div>
         </div>
     </section>
 
-    <!-- SECCIÓN DE PRODUCTOS -->
+    <!-- CSS para desplazamiento suave -->
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
 
+
+    <!-- SECCIÓN DE PRODUCTOS -->
     @foreach($categorias as $categoria)
     <div class="text-center py-12">
         <div id="{{ strtolower($categoria->nombre_cat) }}" class="font-bold" style="color: #F0B39E; font-size: 2rem;">
             {{ strtoupper($categoria->nombre_cat) }}
         </div>
     </div>
-    <section id="{{ strtolower($categoria->nombre) }}" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto py-12">
+    <section id="{{ strtolower($categoria->nombre_cat) }}" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto py-12">
         <!-- Iterar sobre los productos de la categoría -->
         @foreach($categoria->productos as $producto)
         <x-grid-productos :producto="$producto" /> <!-- LLamada al componente -->
         @endforeach
     </section>
     @endforeach
-    </section>
 
 
     <!-- INFORMACIÓN -->
