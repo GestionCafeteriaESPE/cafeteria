@@ -14,6 +14,7 @@
 <body class="min-h-screen bg-white">
     <div class="bg-blue-200 text-center py-2 text-sm text-gray-700">Lunes a Sábado 2pm-8pm</div>
 
+    
     <!--BARRA DE MENÚ -->
     <header id="home" class="flex flex-col md:flex-row items-center justify-between px-4 py-4 border-b">
         <div class="flex items-center space-x-4">
