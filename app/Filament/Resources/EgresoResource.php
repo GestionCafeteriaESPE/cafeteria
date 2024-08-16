@@ -28,6 +28,8 @@ class EgresoResource extends Resource
     protected static ?string $model = Egreso::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Sección Finanzas';
+    protected static ?int $sort = 6;
 
     public static function form(Form $form): Form
     {

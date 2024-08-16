@@ -37,6 +37,8 @@ class PedidoResource extends Resource
     protected static ?string $model = Pedido::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Carrito';
+    protected static ?int $sort = 3;
 
     public static function form(Form $form): Form
     {

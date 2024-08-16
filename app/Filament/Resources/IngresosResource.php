@@ -24,6 +24,8 @@ class IngresosResource extends Resource
     protected static ?string $model = Ingresos::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Sección Finanzas';
+    protected static ?int $sort = 7;
 
     public static function form(Form $form): Form
     {

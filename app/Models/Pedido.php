@@ -11,6 +11,8 @@ class Pedido extends Model
 {
     use HasFactory;
 
+    protected $table = 'pedidos';
+
     protected $fillable = ['fecha_ped', 'total_ped', 'modoPago_ped', 'estado_ped', 'id_cli'];
 
     public function cliente(): BelongsTo

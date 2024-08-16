@@ -24,6 +24,8 @@ class InventarioResource extends Resource
 {
     protected static ?string $model = Inventario::class;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = null; // Dejarlo fuera de cualquier grupo
+    protected static ?int $sort = 1;
 
     public static function form(Form $form): Form
     {
