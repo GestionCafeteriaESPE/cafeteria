@@ -19,6 +19,7 @@ class Dashboard extends Page
             PedidoWidget::class,
             ProductoMVWidget::class,
             ProductoWidget::class,
+            ProductoHWidget::class
         ];
     }
 }
