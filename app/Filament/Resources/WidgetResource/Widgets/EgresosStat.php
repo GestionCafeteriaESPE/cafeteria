@@ -6,12 +6,14 @@ use App\Models\Egreso;
 use App\Models\Ingresos;
 use App\Models\Pedido;
 use App\Models\PeDetalle;
-
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class EgresosStat extends BaseWidget
 {
+    use HasWidgetShield;
+    
     protected function getStats(): array
     {
         $totalEgresos = Egreso::sum('cantidad_Egr');

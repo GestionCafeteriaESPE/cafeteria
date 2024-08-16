@@ -3,13 +3,16 @@
 namespace App\Filament\Resources\WidgetResource\Widgets;
 
 use App\Models\PeDetalle;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class ProductoMVWidget extends ChartWidget
 {
-    protected static ?string $heading = 'Productos más vendidos por mes';
+    use HasWidgetShield;
+
+    protected static ?string $heading = 'Productos Más Vendidos';
 
     protected function getData(): array
     {
@@ -68,6 +71,7 @@ class ProductoMVWidget extends ChartWidget
     {
         return 'bar';
     }
+
 
     private function getPastelColor($index)
     {

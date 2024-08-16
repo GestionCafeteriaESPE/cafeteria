@@ -3,10 +3,13 @@
 namespace App\Filament\Resources\WidgetResource\Widgets;
 
 use App\Models\Producto;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\Widget;
 
 class ProductoWidget extends Widget
 {
+    use HasWidgetShield;
+
     protected static ?string $heading = 'Disponibilidad de Productos';
 
     protected function getViewData(): array
@@ -16,7 +19,7 @@ class ProductoWidget extends Widget
             ->get();
 
         return [
-            'heading' => static::$heading, 
+            'heading' => static::$heading,
             'productos' => $productos,
         ];
     }

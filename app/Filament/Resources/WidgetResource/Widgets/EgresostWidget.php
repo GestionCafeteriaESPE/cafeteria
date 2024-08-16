@@ -3,11 +3,14 @@
 namespace App\Filament\Resources\WidgetResource\Widgets;
 
 use App\Models\Egreso;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 
 class EgresostWidget extends ChartWidget
 {
+    use HasWidgetShield;
+
     protected static ?string $heading = 'Egresos';
 
     protected function getData(): array
@@ -20,8 +23,8 @@ class EgresostWidget extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Egresos', 
-                    'data' => $egresos->pluck('total')->toArray(),     
+                    'label' => 'Egresos',
+                    'data' => $egresos->pluck('total')->toArray(),
                 ],
             ],
             'labels' => $egresos->pluck('date')->map(fn($date) => date('Y/m/d', strtotime($date)))->toArray(),
