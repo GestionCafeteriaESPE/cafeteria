@@ -7,6 +7,6 @@
         <h3 class="text-xl font-bold">{{ $producto->nombre_pro }}</h3>
         <p class="text-sm text-muted-foreground">{{ $producto->descripcion_pro }}</p>
         <p class="text-lg font-semibold">Precio: {{$producto->precio_pro}}</p>
-        <p class="text-lg font-semibold">Disponibilidad: {{$producto->disponibilidad_pro}}</p>
+        
     </div>
 </div>
